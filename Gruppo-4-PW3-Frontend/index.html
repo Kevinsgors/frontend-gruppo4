@@ -1,13 +1,51 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="script/index.js"></script>
+    <title>Login</title>
+    <link rel="icon" type="image/png" href="/assets/logo-mona.png">
+</head>
+
+<body>
+    <div id="modal-errore-overlay" class="modal-errore-overlay" style="display:none;">
+        <div id="modal-errore" class="modal-errore">
+            <span class="modal-close">&times;</span>
+            <span class="modal-text">Email o password errati</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <img class="left-image" src="/assets/immagine.png" alt="Immagine sinistra">
+
+        <div class="right-panel">
+            <img class="logo" src="/assets/logo-mona.png" alt="Logo Mona">
+
+            <div class="form-box">
+                <h1 class="title">Accedi</h1>
+
+                <form action="/FAKE/INDEX">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="input" placeholder="Inserisci la tua email" required>
+                    </div>
+
+                    <div class="form-group" style="position: relative;">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="input" placeholder="Inserisci la tua password"
+                            required style="padding-right: 40px;">
+                        </span>
+                    </div>
+
+                    <div id="errore" style="color: red; margin-top: 10px;"></div>
+
+                    <button type="submit" class="login-button">Accedi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
