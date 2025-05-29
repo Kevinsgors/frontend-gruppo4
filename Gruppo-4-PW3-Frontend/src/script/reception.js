@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setupEmployeeBadgesHistory();
     setupVisitorBadgesHistory();
     setupLunchAreaBadgesHistory();
+    setupEmployeePhoneDirectory();
 });
 
 // Initialize dropdown menu functionality
@@ -684,4 +685,98 @@ function showLunchAreaBadgeDetails(badge) {
     // Show modal
     const modal = document.getElementById('badgeDetailsModal');
     modal.style.display = 'block';
+}
+
+let employeePhoneDirectoryTable = null;
+
+async function setupEmployeePhoneDirectory() {
+    document.getElementById('visualizza-elenco-tel-sm').addEventListener('click', async function () {
+        if (!employeePhoneDirectoryTable) {
+            try {
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    throw new Error('No access token found');
+                }
+
+                await refreshJwt(); // Refresh JWT if needed
+                initializeEmployeePhoneDirectoryTable();
+                await fetchAndPopulatePhoneDirectory();
+            } catch (error) {
+                console.error('Error setting up phone directory table:', error);
+            }
+        }
+    });
+}
+
+function initializeEmployeePhoneDirectoryTable() {
+    employeePhoneDirectoryTable = $('#employeePhoneDirectoryTable').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf'
+        ],
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+        },
+        order: [[1, 'asc'], [0, 'asc']], // Ordina per cognome, poi per nome
+        columns: [
+            {
+                title: 'Nome',
+                data: 'nome',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Cognome',
+                data: 'cognome',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Email',
+                data: 'email',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Telefono',
+                data: 'telefono',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Cellulare',
+                data: 'cellulare',
+                render: function (data) {
+                    return data || '';
+                }
+            }
+        ]
+    });
+}
+
+async function fetchAndPopulatePhoneDirectory() {
+    try {
+        const response = await fetch('http://localhost:8080/employee-contact-list', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const contacts = await response.json();
+        employeePhoneDirectoryTable.clear().rows.add(contacts).draw();
+
+    } catch (error) {
+        console.error('Error fetching phone directory:', error);
+    }
 }
