@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+</head>
+<body>
+    <div class="dashboardDesktop">
+        <aside class="sidebar">
+                <img class="logo" src="/assets/logo.png" alt="Logo">                <nav class="menu">
+                    <!-- Home -->
+                    <div class="menu-item" id="home">Home</div>
+
+                    <!-- Menu Visite -->
+                    <div class="menu-item" id="visualizza">
+                        <div class="menu-content">
+                            Visite <span class="arrow"><img src="/assets/down_arrow_white_icon.png"
+                                    alt="Freccia giù"></span>
+                        </div>
+                        <div class="submenu">
+                            <div class="submenu-item" id="visualizza-elenco-visite-odierne">Elenco odierne</div>
+                            <div class="submenu-item" id="visualizza-elenco-visite-future">Elenco future</div>
+                        <div class="submenu-item" id="admin-visite-personali">Elenco visite personali</div>
+                        </div>                    
+                    </div>
+
+                    <!-- Menu Storico -->
+                    <div class="menu-item" id="storico">
+                        <div class="menu-content">
+                            Storico <span class="arrow"><img src="/assets/down_arrow_white_icon.png"
+                                    alt="Freccia giù"></span>
+                        </div>
+                        <div class="submenu">
+                            <div class="submenu-item" id="storico-timbrature-mensa">Storico visite</div>
+                            <div class="submenu-item" id="storico-timbrature-visitatori">Storico timbrature visitatori</div>
+                            <div class="submenu-item" id="storico-timbrature-dipendenti">Storico timbrature dipendenti</div>
+                            <div class="submenu-item" id="storico-timbrature-mensa">Storico timbrature mensa</div>
+                        </div>                    </div>
+
+                    <!-- Menu Persone -->
+                    <div class="menu-item" id="visitatori">
+                        <div class="menu-content">
+                            Persone <span class="arrow"><img src="/assets/down_arrow_white_icon.png"
+                                    alt="Freccia giù"></span>
+                        </div>
+                        <div class="submenu">
+                            <div class="submenu-item" id="visitatori-crea-visite">Crea visite</div>
+                            <div class="submenu-item" id="visitatori-crea-persone">Crea persone</div>
+                            <div class="submenu-item" id="visitatori-elenco-presenti">Elenco presenti</div>
+                            <div class="submenu-item" id="visualizza-elenco-persone">Elenco persone</div>
+                            <div class="submenu-item" id="visualizza-elenco-tel-sm">Elenco telefonico dipendenti</div>
+                        </div>
+                    </div>                
+                </nav>
+
+                <!-- User Info -->
+                <div class="user-box">
+                    <div class="avatar-bg"></div>
+                    <img class="avatar" src="/assets/utente.png" alt="User Avatar">
+                    <div class="user-name">Nome e Cognome</div>
+                    <button class="action-button">Logout</button>
+                </div>            
+            </aside>
+    </div>
+    
+</body>
+</html>

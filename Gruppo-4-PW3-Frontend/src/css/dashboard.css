@@ -1,0 +1,172 @@
+/* =====================
+   RESET E BASE
+   ===================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.dashboardDesktop {
+  display: block;
+}
+
+.dashboardMobile {
+  display: none;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: Helvetica, Arial, sans-serif;
+  background-color: #0A1429;
+}
+
+/* =====================
+   SIDEBAR E MENU
+   ===================== */
+.sidebar {
+  width: 250px;
+  height: 100%;
+  background-color: #0A1429;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px 10px;
+  position: absolute;
+}
+
+.logo {
+  width: 180px;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 30px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.menu-item {
+  font-size: 18px;
+  padding: 10px 15px;
+  cursor: pointer;
+  width: 100%;
+  color: #fff;
+  transition: color 0.3s ease;
+  border-radius: 8px;
+  display: block;
+  position: relative;
+}
+.menu-item .menu-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.menu-item .arrow {
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+.menu-item .arrow img {
+  height: 25px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.submenu {
+  display: none;
+  flex-direction: column;
+  padding-left: 20px;
+  margin-top: 10px;
+  width: 100%;
+  position: relative;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+.submenu.active {
+  display: block;
+  max-height: 500px;
+  padding-top: 10px;
+}
+.submenu-item {
+  padding: 8px 0;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.menu-item:hover,
+.submenu-item:hover {
+  color: #7C8BA6;
+}
+.menu-item:active,
+.submenu-item:active {
+  color: #7C8BA6;
+}
+
+/* --- Submenu scroll se più di 5 elementi --- */
+.menu .submenu {
+  max-height: 220px; /* Circa 5 elementi da 40-44px ciascuno */
+  overflow-y: auto;
+  transition: max-height 0.2s;
+}
+
+/* Scrollbar custom per submenu */
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  background: #1b2b48;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #405577;
+  border-radius: 8px;
+  min-height: 30px;
+}
+
+/* =====================
+   USER BOX
+   ===================== */
+.user-box {
+  margin-top: auto;
+  margin-left: 10%;
+  width: 80%;
+  background-color: #7C8BA6;
+  border-radius: 16px;
+  padding: 20px 10px;
+  text-align: center;
+  position: relative;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 6px;
+}
+.user-name {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #0A1429;
+  font-weight: bold;
+}
+.user-box .action-button {
+  max-width: 120px;
+  height: 35px;
+  font-size: 14px;
+}
