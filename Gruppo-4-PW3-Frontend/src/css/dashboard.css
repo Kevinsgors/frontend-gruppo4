@@ -84,12 +84,14 @@ html, body {
   margin-top: 10px;
   width: 100%;
   position: relative;
+  opacity: 0;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-out;
+  transition: all 0.3s ease-out;
 }
 .submenu.active {
-  display: block;
+  display: flex;
+  opacity: 1;
   max-height: 500px;
   padding-top: 10px;
 }
@@ -169,4 +171,75 @@ html, body {
   max-width: 120px;
   height: 35px;
   font-size: 14px;
+}
+
+/* =====================
+   BOTTONI GENERICI
+   ===================== */
+.action-button {
+  width: 100%;
+  max-width: 240px;
+  height: 50px;
+  border-radius: 30px;
+  background-color: #1b2b48;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+.action-button:hover {
+  background-color: #405577;
+}
+
+/* =====================
+   AREA CONTENUTI PRINCIPALE
+   ===================== */
+.main-content {
+  position: absolute;
+  top: 20px;
+  left: 270px;
+  right: 20px;
+  width: calc(100% - 290px);
+  height: calc(100% - 40px);
+  background-color: #fff;
+  border-radius: 40px;
+  padding: 30px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.content-area {
+  position: absolute;
+  top: 20px;
+  left: 250px;
+  right: 20px;
+  width: calc(100% - 270px - 20px);
+  height: calc(100% - 40px);
+  background-color: #fff;
+  border-radius: 40px;
+  padding: 20px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+/* =====================
+   SEZIONI E LAYOUT FORM
+   ===================== */
+.section {
+  display: none;
+  height: 100%;
+  overflow: auto;
+}
+.section.active {
+  display: block;
+}
+.section.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
 }
