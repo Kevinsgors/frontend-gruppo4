@@ -1,23 +1,27 @@
 // Dashboard Admin JavaScript Functions
 
-document.addEventListener('DOMContentLoaded', function() {
+// Main initialization
+document.addEventListener('DOMContentLoaded', function () {
     initializeMenus();
     initializeSectionNavigation();
     setupVisitsHistory();
+    setupEmployeeBadgesHistory();
+    setupVisitorBadgesHistory();
+    setupLunchAreaBadgesHistory();
 });
 
 // Initialize dropdown menu functionality
 function initializeMenus() {
     const menuItems = document.querySelectorAll('.menu-item');
-    
+
     menuItems.forEach(menuItem => {
         const menuContent = menuItem.querySelector('.menu-content');
         const submenu = menuItem.querySelector('.submenu');
         const arrow = menuItem.querySelector('.arrow img');
-        
+
         // Only add click handler if menu has submenu
         if (menuContent && submenu && arrow) {
-            menuContent.addEventListener('click', function(e) {
+            menuContent.addEventListener('click', function (e) {
                 e.stopPropagation();
                 toggleSubmenu(submenu, arrow);
             });
@@ -28,11 +32,11 @@ function initializeMenus() {
 // Toggle submenu visibility and arrow direction
 function toggleSubmenu(submenu, arrowImg) {
     const isActive = submenu.classList.contains('active');
-    
+
     if (!isActive) {
         // Close all other submenus first (but not this one)
         closeAllSubmenus(submenu);
-        
+
         // Open this submenu
         submenu.classList.add('active');
         // Change arrow from down to up
@@ -50,18 +54,18 @@ function toggleSubmenu(submenu, arrowImg) {
 function closeAllSubmenus(exceptSubmenu = null) {
     const allSubmenus = document.querySelectorAll('.submenu');
     const allArrows = document.querySelectorAll('.arrow img');
-    
+
     allSubmenus.forEach(submenu => {
         if (submenu !== exceptSubmenu) {
             submenu.classList.remove('active');
         }
     });
-    
+
     allArrows.forEach(arrow => {
         // Solo resetta le frecce dei submenu che non sono l'eccezione
         const parentMenuItem = arrow.closest('.menu-item');
         const parentSubmenu = parentMenuItem ? parentMenuItem.querySelector('.submenu') : null;
-        
+
         if (parentSubmenu !== exceptSubmenu) {
             arrow.src = '/src/assets/down_arrow_white_icon.png';
             arrow.removeAttribute('data-submenu-open');
@@ -74,18 +78,18 @@ function initializeSectionNavigation() {
     // Handle Home menu item
     const homeMenuItem = document.getElementById('home');
     if (homeMenuItem) {
-        homeMenuItem.addEventListener('click', function() {
+        homeMenuItem.addEventListener('click', function () {
             showSection('admin-home-section');
             closeAllSubmenus();
         });
     }      // Handle submenu items navigation
     const submenuItems = document.querySelectorAll('.submenu-item');
-    
+
     submenuItems.forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             const itemId = this.id;
             const sectionId = getSectionIdFromMenuItem(itemId);
-            
+
             if (sectionId) {
                 showSection(sectionId);
                 // Non chiudere i submenu quando si seleziona un elemento
@@ -101,19 +105,19 @@ function getSectionIdFromMenuItem(menuItemId) {
         // Visite submenu
         'visualizza-elenco-visite-odierne': 'admin-visualizza-elenco-visite-odierne-section',
         'visualizza-elenco-visite-future': 'admin-visualizza-elenco-visite-future-section',
-          // Storico submenu
+        // Storico submenu
         'storico-visite': 'admin-storico-timbrature-visite-section',
         'storico-timbrature-visitatori': 'admin-storico-timbrature-visitatori-section',
         'storico-timbrature-dipendenti': 'admin-storico-timbrature-dipendenti-section',
         'storico-timbrature-mensa': 'admin-storico-timbrature-mensa-section',
-        
+
         // Persone submenu
         'visitatori-crea-persone': 'admin-visitatori-crea-persone-section',
         'visitatori-elenco-presenti': 'admin-visitatori-elenco-presenti-section',
         'visualizza-elenco-persone': 'admin-visualizza-elenco-persone-section',
         'visualizza-elenco-tel-sm': 'admin-visualizza-elenco-tel-sm-section'
     };
-    
+
     return mapping[menuItemId] || null;
 }
 
@@ -124,7 +128,7 @@ function showSection(sectionId) {
     allSections.forEach(section => {
         section.classList.remove('active');
     });
-    
+
     // Show target section
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
@@ -133,7 +137,7 @@ function showSection(sectionId) {
 }
 
 // Close submenus when clicking outside
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     if (!e.target.closest('.menu-item')) {
         closeAllSubmenus();
     }
@@ -143,7 +147,7 @@ let visitsTable = null;
 
 async function setupVisitsHistory() {
     // Initialize DataTable when the storico-visite menu item is clicked
-    document.getElementById('storico-visite').addEventListener('click', async function() {
+    document.getElementById('storico-visite').addEventListener('click', async function () {
         if (!visitsTable) {
             try {
                 const token = localStorage.getItem('accessToken');
@@ -162,7 +166,8 @@ async function setupVisitsHistory() {
     });
 }
 
-function initializeVisitsTable() {    visitsTable = $('#visitsTable').DataTable({
+function initializeVisitsTable() {
+    visitsTable = $('#visitsTable').DataTable({
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
@@ -173,52 +178,52 @@ function initializeVisitsTable() {    visitsTable = $('#visitsTable').DataTable(
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
-            { 
+            {
                 title: 'Visitatore',
                 data: null,
-                render: function(data) {
+                render: function (data) {
                     return `${data.personaVisitatore?.nome || ''} ${data.personaVisitatore?.cognome || ''}`;
                 }
             },
-            { 
+            {
                 title: 'Data Inizio',
                 data: 'dataInizio',
-                render: function(data) {
+                render: function (data) {
                     return data ? new Date(data).toLocaleDateString('it-IT') : '';
                 }
             },
             {
                 title: 'Ora Inizio',
                 data: 'oraInizio',
-                render: function(data) {
+                render: function (data) {
                     return data || '';
                 }
             },
-            { 
+            {
                 title: 'Data Fine',
                 data: 'dataFine',
-                render: function(data) {
+                render: function (data) {
                     return data ? new Date(data).toLocaleDateString('it-IT') : '';
                 }
             },
             {
                 title: 'Ora Fine',
                 data: 'oraFine',
-                render: function(data) {
+                render: function (data) {
                     return data || '';
                 }
             },
             {
                 title: 'Dipendente',
                 data: null,
-                render: function(data) {
+                render: function (data) {
                     return `${data.responsabile?.nome || ''} ${data.responsabile?.cognome || ''}`;
                 }
             },
             {
                 title: 'Azioni',
                 data: null,
-                render: function(data, type, row) {
+                render: function (data, type, row) {
                     // Pass the entire row data to showVisitDetails
                     return `<button onclick='showVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
                 }
@@ -256,7 +261,7 @@ function showVisitDetails(visit) {
     document.getElementById('visitorSurname').textContent = visit.personaVisitatore?.cognome || '';
     document.getElementById('visitorEmail').textContent = visit.personaVisitatore?.mail || '';
     document.getElementById('visitorPhone').textContent = visit.personaVisitatore?.telefono || visit.personaVisitatore?.cellulare || '';
-    
+
     // Populate employee information
     document.getElementById('employeeName').textContent = visit.responsabile?.nome || '';
     document.getElementById('employeeSurname').textContent = visit.responsabile?.cognome || '';
@@ -268,9 +273,9 @@ function showVisitDetails(visit) {
     const startTime = visit.oraInizio || '';
     const endTime = visit.oraFine || '';
 
-    document.getElementById('startDate').textContent = startDate ? 
+    document.getElementById('startDate').textContent = startDate ?
         `${startDate.toLocaleDateString('it-IT')} ${startTime}` : '';
-    document.getElementById('endDate').textContent = endDate ? 
+    document.getElementById('endDate').textContent = endDate ?
         `${endDate.toLocaleDateString('it-IT')} ${endTime}` : '';
 
     // Populate additional details
@@ -284,25 +289,399 @@ function showVisitDetails(visit) {
 }
 
 // Modal close functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Setup modal close handlers
-    const modal = document.getElementById('visitDetailsModal');
-    const closeBtn = document.querySelector('.close-modal');
+document.addEventListener('DOMContentLoaded', function () {
+    // Setup modal close handlers for visit details
+    const visitModal = document.getElementById('visitDetailsModal');
+    const visitCloseBtn = visitModal.querySelector('.close-modal');
 
-    closeBtn.onclick = function() {
-        modal.style.display = 'none';
+    visitCloseBtn.onclick = function () {
+        visitModal.style.display = 'none';
     }
 
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
+    // Setup modal close handlers for badge details
+    const badgeModal = document.getElementById('badgeDetailsModal');
+    const badgeCloseBtn = badgeModal.querySelector('.close-modal');
+
+    badgeCloseBtn.onclick = function () {
+        badgeModal.style.display = 'none';
+    }
+
+    // Handle clicking outside any modal to close it
+    window.onclick = function (event) {
+        if (event.target === visitModal) {
+            visitModal.style.display = 'none';
+        }
+        if (event.target === badgeModal) {
+            badgeModal.style.display = 'none';
         }
     }
 
-    // Add escape key handler for modal
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && modal.style.display === 'block') {
-            modal.style.display = 'none';
+    // Add escape key handler for modals
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            if (visitModal.style.display === 'block') {
+                visitModal.style.display = 'none';
+            }
+            if (badgeModal.style.display === 'block') {
+                badgeModal.style.display = 'none';
+            }
         }
     });
 });
+
+let employeeBadgesTable = null;
+
+async function setupEmployeeBadgesHistory() {
+    document.getElementById('storico-timbrature-dipendenti').addEventListener('click', async function () {
+        if (!employeeBadgesTable) {
+            try {
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    throw new Error('No access token found');
+                }
+
+                await refreshJwt(); // Refresh JWT if needed
+                initializeEmployeeBadgesTable();
+                await fetchAndPopulateEmployeeBadges();
+            } catch (error) {
+                console.error('Error setting up employee badges table:', error);
+            }
+        }
+    });
+}
+
+function initializeEmployeeBadgesTable() {
+    employeeBadgesTable = $('#employeeBadgesTable').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf'
+        ],
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+        },
+        order: [[1, 'desc'], [2, 'desc']], // Ordina per data e ora decrescente
+        columns: [
+            {
+                title: 'Dipendente',
+                data: null,
+                render: function (data) {
+                    return `${data.nome || ''} ${data.cognome || ''}`;
+                }
+            },
+            {
+                title: 'Data',
+                data: 'dataTimbratura',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleDateString('it-IT') : '';
+                }
+            },
+            {
+                title: 'Ora',
+                data: 'oraTimbrature',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Tipo',
+                data: 'descrizioneTimbratrice',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Badge',
+                data: 'codiceBadge',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Azioni',
+                data: null,
+                render: function (data, type, row) {
+                    return `<button onclick='showBadgeDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                }
+            }
+        ]
+    });
+}
+
+async function fetchAndPopulateEmployeeBadges() {
+    try {
+        const response = await fetch('http://localhost:8080/badge-record-history/secondo-mona', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const badges = await response.json();
+        employeeBadgesTable.clear().rows.add(badges).draw();
+
+    } catch (error) {
+        console.error('Error fetching employee badges:', error);
+    }
+}
+
+let visitorBadgesTable = null;
+
+async function setupVisitorBadgesHistory() {
+    document.getElementById('storico-timbrature-visitatori').addEventListener('click', async function () {
+        if (!visitorBadgesTable) {
+            try {
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    throw new Error('No access token found');
+                }
+
+                await refreshJwt(); // Refresh JWT if needed
+                initializeVisitorBadgesTable();
+                await fetchAndPopulateVisitorBadges();
+            } catch (error) {
+                console.error('Error setting up visitor badges table:', error);
+            }
+        }
+    });
+}
+
+function initializeVisitorBadgesTable() {
+    visitorBadgesTable = $('#visitorBadgesTable').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf'
+        ],
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+        },
+        order: [[2, 'desc'], [3, 'desc']], // Ordina per data e ora decrescente
+        columns: [
+            {
+                title: 'Visitatore',
+                data: null,
+                render: function (data) {
+                    return `${data.nome || ''} ${data.cognome || ''}`;
+                }
+            },
+            {
+                title: 'Azienda',
+                data: 'azienda',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Data',
+                data: 'dataTimbratura',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleDateString('it-IT') : '';
+                }
+            },
+            {
+                title: 'Ora',
+                data: 'oraTimbrature',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Tipo',
+                data: 'descrizioneTimbratrice',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Badge',
+                data: 'codiceBadge',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Azioni',
+                data: null,
+                render: function (data, type, row) {
+                    return `<button onclick='showVisitorBadgeDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                }
+            }
+        ]
+    });
+}
+
+async function fetchAndPopulateVisitorBadges() {
+    try {
+        const response = await fetch('http://localhost:8080/badge-record-history/visitors', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const badges = await response.json();
+        visitorBadgesTable.clear().rows.add(badges).draw();
+
+    } catch (error) {
+        console.error('Error fetching visitor badges:', error);
+    }
+}
+
+function showVisitorBadgeDetails(badge) {
+    // Populate visitor information
+    document.getElementById('employeeBadgeName').textContent = badge.nome || '';
+    document.getElementById('employeeBadgeSurname').textContent = badge.cognome || '';
+    document.getElementById('employeeBadgeId').textContent = badge.idPersona || '';
+
+    // Format and populate date and time
+    const badgeDate = badge.dataTimbratura ? new Date(badge.dataTimbratura).toLocaleDateString('it-IT') : '';
+    document.getElementById('badgeDate').textContent = badgeDate;
+    document.getElementById('badgeTime').textContent = badge.oraTimbrature || '';
+
+    // Populate badge details
+    document.getElementById('badgeType').textContent = badge.descrizioneTimbratrice || '';
+    document.getElementById('badgeCode').textContent = badge.codiceBadge || '';
+
+    // Show modal
+    const modal = document.getElementById('badgeDetailsModal');
+    modal.style.display = 'block';
+}
+
+let lunchAreaBadgesTable = null;
+
+async function setupLunchAreaBadgesHistory() {
+    document.getElementById('storico-timbrature-mensa').addEventListener('click', async function () {
+        if (!lunchAreaBadgesTable) {
+            try {
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    throw new Error('No access token found');
+                }
+
+                await refreshJwt(); // Refresh JWT if needed
+                initializeLunchAreaBadgesTable();
+                await fetchAndPopulateLunchAreaBadges();
+            } catch (error) {
+                console.error('Error setting up lunch area badges table:', error);
+            }
+        }
+    });
+}
+
+function initializeLunchAreaBadgesTable() {
+    lunchAreaBadgesTable = $('#lunchAreaBadgesTable').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf'
+        ],
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+        },
+        order: [[2, 'desc'], [3, 'desc']], // Ordina per data e ora decrescente
+        columns: [
+            {
+                title: 'Persona',
+                data: null,
+                render: function (data) {
+                    return `${data.nome || ''} ${data.cognome || ''}`;
+                }
+            },
+            {
+                title: 'Azienda',
+                data: 'azienda',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Data',
+                data: 'dataTimbratura',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleDateString('it-IT') : '';
+                }
+            },
+            {
+                title: 'Ora',
+                data: 'oraTimbrature',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Tipo',
+                data: 'descrizioneTimbratrice',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Badge',
+                data: 'codiceBadge',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Azioni',
+                data: null,
+                render: function (data, type, row) {
+                    return `<button onclick='showLunchAreaBadgeDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                }
+            }
+        ]
+    });
+}
+
+async function fetchAndPopulateLunchAreaBadges() {
+    try {
+        const response = await fetch('http://localhost:8080/badge-record-history/lunch-area', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const badges = await response.json();
+        lunchAreaBadgesTable.clear().rows.add(badges).draw();
+
+    } catch (error) {
+        console.error('Error fetching lunch area badges:', error);
+    }
+}
+
+function showLunchAreaBadgeDetails(badge) {
+    // Populate visitor information
+    document.getElementById('employeeBadgeName').textContent = badge.nome || '';
+    document.getElementById('employeeBadgeSurname').textContent = badge.cognome || '';
+    document.getElementById('employeeBadgeId').textContent = badge.idPersona || '';
+
+    // Format and populate date and time
+    const badgeDate = badge.dataTimbratura ? new Date(badge.dataTimbratura).toLocaleDateString('it-IT') : '';
+    document.getElementById('badgeDate').textContent = badgeDate;
+    document.getElementById('badgeTime').textContent = badge.oraTimbrature || '';
+
+    // Populate badge details
+    document.getElementById('badgeType').textContent = badge.descrizioneTimbratrice || '';
+    document.getElementById('badgeCode').textContent = badge.codiceBadge || '';
+
+    // Show modal
+    const modal = document.getElementById('badgeDetailsModal');
+    modal.style.display = 'block';
+}

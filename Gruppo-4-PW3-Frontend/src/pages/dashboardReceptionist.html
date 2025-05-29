@@ -100,18 +100,57 @@
                         </thead>
                     </table>
                 </div>
-            </section>
-            <section id="admin-storico-timbrature-visitatori-section" class="section">
+            </section>            <section id="admin-storico-timbrature-visitatori-section" class="section">
                 <h2>Storico Timbrature Visitatori</h2>
-                <p>Qui puoi visualizzare lo storico delle timbrature dei visitatori.</p>
+                <div class="table-container">
+                    <table id="visitorBadgesTable" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Visitatore</th>
+                                <th>Azienda</th>
+                                <th>Data</th>
+                                <th>Ora</th>
+                                <th>Tipo</th>
+                                <th>Badge</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </section>
             <section id="admin-storico-timbrature-dipendenti-section" class="section">
                 <h2>Storico Timbrature Dipendenti</h2>
-                <p>Qui puoi visualizzare lo storico delle timbrature dei dipendenti.</p>
-            </section>
-            <section id="admin-storico-timbrature-mensa-section" class="section">
+                <div class="table-container">
+                    <table id="employeeBadgesTable" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Dipendente</th>
+                                <th>Data</th>
+                                <th>Ora</th>
+                                <th>Tipo</th>
+                                <th>Badge</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </section>            <section id="admin-storico-timbrature-mensa-section" class="section">
                 <h2>Storico Timbrature Mensa</h2>
-                <p>Qui puoi visualizzare lo storico delle timbrature della mensa.</p>
+                <div class="table-container">
+                    <table id="lunchAreaBadgesTable" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Persona</th>
+                                <th>Azienda</th>
+                                <th>Data</th>
+                                <th>Ora</th>
+                                <th>Tipo</th>
+                                <th>Badge</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </section>
             <section id="admin-visitatori-crea-persone-section" class="section">
                 <h2>Crea Persone</h2>
@@ -161,6 +200,33 @@
                         <p><strong>Motivo:</strong> <span id="visitReason"></span></p>
                         <p><strong>DPI Richiesti:</strong> <span id="visitDPI"></span></p>
                         <p><strong>Accesso con Automezzo:</strong> <span id="visitCar"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Dettagli Badge -->
+    <div id="badgeDetailsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Dettagli Timbratura</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="details-grid">
+                    <div class="detail-group">
+                        <h3>Informazioni Dipendente</h3>
+                        <p><strong>Nome:</strong> <span id="employeeBadgeName"></span></p>
+                        <p><strong>Cognome:</strong> <span id="employeeBadgeSurname"></span></p>
+                        <p><strong>ID Dipendente:</strong> <span id="employeeBadgeId"></span></p>
+                    </div>
+                    <div class="detail-group">
+                        <h3>Dettagli Timbratura</h3>
+                        <p><strong>Data:</strong> <span id="badgeDate"></span></p>
+                        <p><strong>Ora:</strong> <span id="badgeTime"></span></p>
+                        <p><strong>Tipo:</strong> <span id="badgeType"></span></p>
+                        <p><strong>Codice Badge:</strong> <span id="badgeCode"></span></p>
                     </div>
                 </div>
             </div>
