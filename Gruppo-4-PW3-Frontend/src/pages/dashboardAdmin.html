@@ -6,7 +6,10 @@
     <title>Dashboard Admin</title>
     <link rel="stylesheet" href="/src/css/dashboard.css">
     <script src="/src/script/jwtManager.js"></script>
-    <script src="/src/script/admin.js"></script>
+    <script src="/src/script/admin.js"></script>    
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
 
 </head>
 <body>
@@ -18,9 +21,9 @@
 
                     <!-- Menu Visite -->
                     <div class="menu-item" id="visualizza">
-                        <div class="menu-content">
-                            Visite <span class="arrow"><img src="/src/assets/down_arrow_white_icon.png"
-                                    alt="Freccia giù"></span>
+                        <div class="menu-content">Visite <span class="arrow">
+                            <img src="/src/assets/down_arrow_white_icon.png" alt="Freccia giù">
+                        </span>
                         </div>
                         <div class="submenu">
                             <div class="submenu-item" id="visualizza-elenco-visite-odierne">Elenco odierne</div>
@@ -31,10 +34,11 @@
 
                     <!-- Menu Storico -->
                     <div class="menu-item" id="storico">
-                        <div class="menu-content">
-                            Storico <span class="arrow"><img src="/src/assets/down_arrow_white_icon.png"
-                                    alt="Freccia giù"></span>
-                        </div>                        <div class="submenu">
+                        <div class="menu-content">Storico <span class="arrow">
+                                <img src="/src/assets/down_arrow_white_icon.png" alt="Freccia giù">
+                            </span>
+                        </div>
+                        <div class="submenu">
                             <div class="submenu-item" id="storico-visite">Storico visite</div>
                             <div class="submenu-item" id="storico-timbrature-visitatori">Storico timbrature visitatori</div>
                             <div class="submenu-item" id="storico-timbrature-dipendenti">Storico timbrature dipendenti</div>
@@ -43,9 +47,9 @@
 
                     <!-- Menu Persone -->
                     <div class="menu-item" id="visitatori">
-                        <div class="menu-content">
-                            Persone <span class="arrow"><img src="/src/assets/down_arrow_white_icon.png"
-                                    alt="Freccia giù"></span>
+                        <div class="menu-content">Persone <span class="arrow">
+                                <img src="/src/assets/down_arrow_white_icon.png" alt="Freccia giù">
+                            </span>
                         </div>
                         <div class="submenu">
                             <div class="submenu-item" id="visitatori-crea-visite">Crea visite</div>
