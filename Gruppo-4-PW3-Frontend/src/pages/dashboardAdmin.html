@@ -193,10 +193,53 @@
                         </div>
                     </div>
                 </div>
-            </section>
-            <section id="admin-visualizza-elenco-visite-personali-section" class="section">
+            </section>            <section id="admin-visualizza-elenco-visite-personali-section" class="section">
                 <h2>Elenco Visite Personali</h2>
-                <p>Qui puoi visualizzare le tue visite personali.</p>
+                <div class="table-container">
+                    <table id="personalVisitsTable" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Visitatore</th>
+                                <th>Data Inizio</th>
+                                <th>Ora Inizio</th>
+                                <th>Data Fine</th>
+                                <th>Ora Fine</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal for personal visit details -->
+                <div id="personalVisitDetailsModal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Dettagli Visita Personale</h3>
+                            <span class="close-modal">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="details-grid">
+                                <div class="detail-section">
+                                    <h4>Informazioni Visitatore</h4>
+                                    <p><strong>Nome:</strong> <span id="personalVisitorName"></span></p>
+                                    <p><strong>Cognome:</strong> <span id="personalVisitorSurname"></span></p>
+                                    <p><strong>Email:</strong> <span id="personalVisitorEmail"></span></p>
+                                    <p><strong>Telefono:</strong> <span id="personalVisitorPhone"></span></p>
+                                </div>
+                                <div class="detail-section">
+                                    <h4>Dettagli Visita</h4>
+                                    <p><strong>Data e Ora Inizio:</strong> <span id="personalStartDate"></span></p>
+                                    <p><strong>Data e Ora Fine:</strong> <span id="personalEndDate"></span></p>
+                                    <p><strong>Motivo:</strong> <span id="personalVisitReason"></span></p>
+                                    <p><strong>DPI Richiesti:</strong> <span id="personalVisitDPI"></span></p>
+                                    <p><strong>Accesso con Automezzo:</strong> <span id="personalVisitCar"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
             <section id="admin-storico-timbrature-visite-section" class="section">
                 <h2>Storico Visite</h2>

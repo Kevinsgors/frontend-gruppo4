@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeSectionNavigation();
     setupTodayVisits();
     setupFutureVisits();
+    setupPersonalVisits();
     setupVisitsHistory();
     setupEmployeeBadgesHistory();
     setupVisitorBadgesHistory();
@@ -150,6 +151,7 @@ document.addEventListener('click', function (e) {
 
 let todayVisitsTable = null;
 let futureVisitsTable = null;
+let personalVisitsTable = null;
 let peopleTable = null;
 
 async function setupTodayVisits() {
@@ -198,6 +200,30 @@ async function setupFutureVisits() {
         } else {
             // Refresh data if table already exists
             await fetchAndPopulateFutureVisits();
+        }    });
+}
+
+async function setupPersonalVisits() {
+    // Initialize DataTable when the admin-visite-personali menu item is clicked
+    document.getElementById('admin-visite-personali').addEventListener('click', async function () {
+        if (!personalVisitsTable) {
+            try {
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    throw new Error('No access token found');
+                }
+
+                await refreshJwt(); // Refresh JWT if needed
+                initializePersonalVisitsTable();
+                await fetchAndPopulatePersonalVisits();
+            } catch (error) {
+                console.error('Error setting up personal visits table:', error);
+                // Show error message to the user
+                alert('Errore durante il caricamento delle visite personali. Riprova più tardi.');
+            }
+        } else {
+            // Refresh data if table already exists
+            await fetchAndPopulatePersonalVisits();
         }
     });
 }
@@ -353,6 +379,63 @@ function initializeFutureVisitsTable() {
                     return `<button onclick='showFutureVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
                 }
             }
+        ]    });
+}
+
+function initializePersonalVisitsTable() {
+    personalVisitsTable = $('#personalVisitsTable').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf'
+        ],
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+        },
+        order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
+        columns: [
+            {
+                title: 'Visitatore',
+                data: null,
+                render: function (data) {
+                    return `${data.personaVisitatore?.nome || ''} ${data.personaVisitatore?.cognome || ''}`;
+                }
+            },
+            {
+                title: 'Data Inizio',
+                data: 'dataInizio',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleDateString('it-IT') : '';
+                }
+            },
+            {
+                title: 'Ora Inizio',
+                data: 'oraInizio',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Data Fine',
+                data: 'dataFine',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleDateString('it-IT') : '';
+                }
+            },
+            {
+                title: 'Ora Fine',
+                data: 'oraFine',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Azioni',
+                data: null,
+                render: function (data, type, row) {
+                    return `<button onclick='showPersonalVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                }
+            }
         ]
     });
 }
@@ -499,11 +582,51 @@ async function fetchAndPopulateFutureVisits() {
         // Show message if no future visits
         if (futureVisits.length === 0) {
             console.log('Nessuna visita futura programmata');
+        }    } catch (error) {
+        console.error('Error fetching future visits:', error);
+        alert('Errore durante il recupero delle visite future.');
+    }
+}
+
+async function fetchAndPopulatePersonalVisits() {
+    try {
+        // Get current user ID from JWT token
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            throw new Error('No access token found');
+        }
+
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.id;
+
+        if (!userId) {
+            throw new Error('User ID not found in token');
+        }
+
+        // Fetch visits with user ID as query parameter
+        const response = await fetch(`http://localhost:8080/visit?id=${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const personalVisits = await response.json();
+        personalVisitsTable.clear().rows.add(personalVisits).draw();
+
+        // Show message if no personal visits
+        if (personalVisits.length === 0) {
+            console.log('Nessuna visita personale trovata');
         }
 
     } catch (error) {
-        console.error('Error fetching future visits:', error);
-        alert('Errore durante il recupero delle visite future.');
+        console.error('Error fetching personal visits:', error);
+        alert('Errore durante il recupero delle visite personali.');
     }
 }
 
@@ -595,10 +718,36 @@ function showFutureVisitDetails(visit) {
     // Populate additional details
     document.getElementById('futureVisitReason').textContent = visit.motivo || '';
     document.getElementById('futureVisitDPI').textContent = visit.flagDPI ? 'Sì' : 'No';
-    document.getElementById('futureVisitCar').textContent = visit.flagAccessoConAutomezzo ? 'Sì' : 'No';
+    document.getElementById('futureVisitCar').textContent = visit.flagAccessoConAutomezzo ? 'Sì' : 'No';    // Show modal
+    const modal = document.getElementById('futureVisitDetailsModal');
+    modal.style.display = 'block';
+}
+
+function showPersonalVisitDetails(visit) {
+    // Populate visitor information
+    document.getElementById('personalVisitorName').textContent = visit.personaVisitatore?.nome || '';
+    document.getElementById('personalVisitorSurname').textContent = visit.personaVisitatore?.cognome || '';
+    document.getElementById('personalVisitorEmail').textContent = visit.personaVisitatore?.mail || '';
+    document.getElementById('personalVisitorPhone').textContent = visit.personaVisitatore?.telefono || visit.personaVisitatore?.cellulare || '';
+
+    // Format and populate dates
+    const startDate = visit.dataInizio ? new Date(visit.dataInizio) : null;
+    const endDate = visit.dataFine ? new Date(visit.dataFine) : null;
+    const startTime = visit.oraInizio || '';
+    const endTime = visit.oraFine || '';
+
+    document.getElementById('personalStartDate').textContent = startDate ?
+        `${startDate.toLocaleDateString('it-IT')} ${startTime}` : '';
+    document.getElementById('personalEndDate').textContent = endDate ?
+        `${endDate.toLocaleDateString('it-IT')} ${endTime}` : '';
+
+    // Populate additional details
+    document.getElementById('personalVisitReason').textContent = visit.motivo || '';
+    document.getElementById('personalVisitDPI').textContent = visit.flagDPI ? 'Sì' : 'No';
+    document.getElementById('personalVisitCar').textContent = visit.flagAccessoConAutomezzo ? 'Sì' : 'No';
 
     // Show modal
-    const modal = document.getElementById('futureVisitDetailsModal');
+    const modal = document.getElementById('personalVisitDetailsModal');
     modal.style.display = 'block';
 }
 
@@ -640,15 +789,23 @@ document.addEventListener('DOMContentLoaded', function () {
         futureCloseBtn.onclick = function () {
             futureModal.style.display = 'none';
         }
-    }
-
-    // Setup modal close handlers for person details modal
+    }    // Setup modal close handlers for person details modal
     const personModal = document.getElementById('personDetailsModal');
     const personCloseBtn = personModal?.querySelector('.close-modal');
 
     if (personCloseBtn) {
         personCloseBtn.onclick = function () {
             personModal.style.display = 'none';
+        }
+    }
+
+    // Setup modal close handlers for personal visits modal
+    const personalModal = document.getElementById('personalVisitDetailsModal');
+    const personalCloseBtn = personalModal?.querySelector('.close-modal');
+
+    if (personalCloseBtn) {
+        personalCloseBtn.onclick = function () {
+            personalModal.style.display = 'none';
         }
     }
 
@@ -661,6 +818,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (event.target === personModal) {
             personModal.style.display = 'none';
+        }
+        if (event.target === personalModal) {
+            personalModal.style.display = 'none';
         }
     }
 
@@ -675,6 +835,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (personModal && personModal.style.display === 'block') {
                 personModal.style.display = 'none';
+            }
+            if (personalModal && personalModal.style.display === 'block') {
+                personalModal.style.display = 'none';
             }
         }
     });
