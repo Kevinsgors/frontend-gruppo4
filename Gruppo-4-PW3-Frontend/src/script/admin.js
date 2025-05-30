@@ -574,7 +574,7 @@ function initializeTodayVisitsTable() {
                 render: function (data) {
                     return `${data.responsabile?.nome || ''} ${data.responsabile?.cognome || ''}`;
                 }
-            },            {
+            }, {
                 title: 'Stato Visita',
                 data: 'status',
                 render: function (data) {
@@ -596,10 +596,17 @@ function initializeTodayVisitsTable() {
                 }
             },
             {
-                title: 'Azioni',
+                title: 'Dettagli',
                 data: null,
-                render: function (data, type, row) {
+                render: function (data) {
                     return `<button onclick='showTodayVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                }
+            },
+            {
+                title: 'Elimina',
+                data: null,
+                render: function (data) {
+                    return `<button onclick='deleteVisit(${data.id})' class="action-button delete-button">Elimina</button>`;
                 }
             }
         ]
@@ -669,10 +676,17 @@ function initializeFutureVisitsTable() {
                 }
             },
             {
-                title: 'Azioni',
+                title: 'Dettagli',
                 data: null,
-                render: function (data, type, row) {
+                render: function (data) {
                     return `<button onclick='showFutureVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                }
+            },
+            {
+                title: 'Elimina',
+                data: null,
+                render: function (data) {
+                    return `<button onclick='deleteVisit(${data.id})' class="action-button delete-button">Elimina</button>`;
                 }
             }
         ]
@@ -805,7 +819,7 @@ function initializePeopleTable() {
                 render: function (data) {
                     return data || '';
                 }
-            },
+            },            
             {
                 title: 'Ruolo',
                 data: 'ruolo',
@@ -814,10 +828,17 @@ function initializePeopleTable() {
                 }
             },
             {
-                title: 'Azioni',
+                title: 'Dettagli',
                 data: null,
-                render: function (data, type, row) {
+                render: function (data) {
                     return `<button onclick='showPersonDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                }
+            },
+            {
+                title: 'Elimina',
+                data: null,
+                render: function (data) {
+                    return `<button onclick='deletePerson(${data.idPersona})' class="action-button delete-button">Elimina</button>`;
                 }
             }
         ]
@@ -1433,6 +1454,114 @@ async function fetchAndPopulateVisits() {
     }
 }
 
+async function deleteVisit(visitId) {
+    // Ask for confirmation before deleting
+    if (!confirm('Sei sicuro di voler eliminare questa visita?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/visit/${visitId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const deleted = await response.json();
+        
+        if (deleted) {
+            // Update both today and future visits tables if they exist
+            const todayTable = $('#todayVisitsTable').DataTable();
+            const futureTable = $('#futureVisitsTable').DataTable();
+
+            // Remove the visit from today's table if it exists
+            if (todayTable) {
+                todayTable.rows().every(function() {
+                    const rowData = this.data();
+                    if (rowData.id === visitId) {
+                        this.remove();
+                    }
+                });
+                todayTable.draw(false);
+            }
+
+            // Remove the visit from future table if it exists
+            if (futureTable) {
+                futureTable.rows().every(function() {
+                    const rowData = this.data();
+                    if (rowData.id === visitId) {
+                        this.remove();
+                    }
+                });
+                futureTable.draw(false);
+            }
+
+            // Show success message
+            alert('Visita eliminata con successo!');
+
+            // Update counts if needed
+            await updatePeopleCount();
+        } else {
+            throw new Error('Eliminazione non riuscita');
+        }
+    } catch (error) {
+        console.error('Error deleting visit:', error);
+        alert('Errore durante l\'eliminazione della visita. Riprova più tardi.');
+    }
+}
+
+// Handle person deletion based on @DELETE /person/{idPersona} endpoint
+async function deletePerson(idPersona) {
+    // Ask for confirmation before deleting
+    if (!confirm('Sei sicuro di voler eliminare questa persona?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/person/${idPersona}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const deleted = await response.json();
+        
+        if (deleted) {
+            // Update the people table
+            const peopleTable = $('#peopleTable').DataTable();
+            
+            // Remove the person from the table
+            peopleTable.rows().every(function() {
+                const rowData = this.data();
+                if (rowData.idPersona === idPersona) {
+                    this.remove();
+                }
+            });
+            peopleTable.draw(false);
+
+            // Show success message
+            alert('Persona eliminata con successo!');
+        } else {
+            throw new Error('Eliminazione non riuscita');
+        }
+    } catch (error) {
+        console.error('Error deleting person:', error);
+        alert('Errore durante l\'eliminazione della persona. Riprova più tardi.');
+    }
+}
+
 let employeeBadgesTable = null;
 
 async function setupEmployeeBadgesHistory() {
@@ -2033,5 +2162,114 @@ async function endVisit(visitId) {
     } catch (error) {
         console.error('Error ending visit:', error);
         alert('Errore durante la chiusura della visita. Riprova più tardi.');
+    }
+}
+
+// Handle visit deletion based on @DELETE /{id} endpoint
+async function deleteVisit(visitId) {
+    // Ask for confirmation before deleting
+    if (!confirm('Sei sicuro di voler eliminare questa visita?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/visit/${visitId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const deleted = await response.json();
+        
+        if (deleted) {
+            // Update both today and future visits tables if they exist
+            const todayTable = $('#todayVisitsTable').DataTable();
+            const futureTable = $('#futureVisitsTable').DataTable();
+
+            // Remove the visit from today's table if it exists
+            if (todayTable) {
+                todayTable.rows().every(function() {
+                    const rowData = this.data();
+                    if (rowData.id === visitId) {
+                        this.remove();
+                    }
+                });
+                todayTable.draw(false);
+            }
+
+            // Remove the visit from future table if it exists
+            if (futureTable) {
+                futureTable.rows().every(function() {
+                    const rowData = this.data();
+                    if (rowData.id === visitId) {
+                        this.remove();
+                    }
+                });
+                futureTable.draw(false);
+            }
+
+            // Show success message
+            alert('Visita eliminata con successo!');
+
+            // Update counts if needed
+            await updatePeopleCount();
+        } else {
+            throw new Error('Eliminazione non riuscita');
+        }
+    } catch (error) {
+        console.error('Error deleting visit:', error);
+        alert('Errore durante l\'eliminazione della visita. Riprova più tardi.');
+    }
+}
+
+// Handle person deletion based on @DELETE /person/{idPersona} endpoint
+async function deletePerson(idPersona) {
+    // Ask for confirmation before deleting
+    if (!confirm('Sei sicuro di voler eliminare questa persona?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/person/${idPersona}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const deleted = await response.json();
+        
+        if (deleted) {
+            // Update the people table
+            const peopleTable = $('#peopleTable').DataTable();
+            
+            // Remove the person from the table
+            peopleTable.rows().every(function() {
+                const rowData = this.data();
+                if (rowData.idPersona === idPersona) {
+                    this.remove();
+                }
+            });
+            peopleTable.draw(false);
+
+            // Show success message
+            alert('Persona eliminata con successo!');
+        } else {
+            throw new Error('Eliminazione non riuscita');
+        }
+    } catch (error) {
+        console.error('Error deleting person:', error);
+        alert('Errore durante l\'eliminazione della persona. Riprova più tardi.');
     }
 }
