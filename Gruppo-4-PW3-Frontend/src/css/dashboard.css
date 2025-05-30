@@ -191,8 +191,8 @@ body {
 .action-button {
     width: 100%;
     max-width: 240px;
-    height: 50px;
-    border-radius: 30px;
+    height: 40px;
+    border-radius: 20px;
     background-color: #1b2b48;
     color: white;
     font-size: 16px;
@@ -201,9 +201,31 @@ body {
     display: block;
     margin: 0 auto;
 }
-
+ 
 .action-button:hover {
     background-color: #405577;
+}
+ 
+.dt-buttons .dt-button {
+    background: #1b2b48 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    transition: background 0.2s !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+    height: 32px !important;
+    max-width: 280px !important;
+}
+ 
+.dt-buttons .dt-button:hover {
+    background: #405577 !important;
+}
+ 
+.dt-buttons {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
 }
 
 /* =====================
@@ -508,6 +530,12 @@ body {
   box-sizing: border-box;
   overflow: hidden;
 } 
+
+.box h3 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
 .big-box.create-user-box .action-button.mini-link {
   min-height: 28px;
   font-size: 14px;

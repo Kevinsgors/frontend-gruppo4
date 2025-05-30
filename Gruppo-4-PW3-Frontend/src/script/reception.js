@@ -13,7 +13,9 @@ document.addEventListener('DOMContentLoaded', function () {
     setupTodayVisits();
     setupFutureVisits();
     setupPeopleList();
-    updatePeopleCount();
+    updatePeopleCount();    
+    setupPresentPeopleTables(); // Initialize present people tables on load
+    setupPresentPeople(); // Initialize present people section
 
     // Attach the create person form submit handler here!
     const createPersonForm = document.getElementById('createPersonForm');
@@ -142,6 +144,9 @@ async function setupHomeDashboard() {
     try {
         // Initialize home dashboard tables
         initializeHomeDashboardTables();
+
+        // Initialize present people tables
+        setupPresentPeopleTables();
         
         // Setup navigation buttons
         setupHomeDashboardNavigation();
@@ -520,13 +525,21 @@ async function setupVisitsHistory() {
 
 function initializeVisitsTable() {
     visitsTable = $('#visitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -664,13 +677,21 @@ async function setupEmployeeBadgesHistory() {
 
 function initializeEmployeeBadgesTable() {
     employeeBadgesTable = $('#employeeBadgesTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'desc'], [2, 'desc']], // Ordina per data e ora decrescente
         columns: [
@@ -758,13 +779,21 @@ async function setupVisitorBadgesHistory() {
 
 function initializeVisitorBadgesTable() {
     visitorBadgesTable = $('#visitorBadgesTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[2, 'desc'], [3, 'desc']], // Ordina per data e ora decrescente
         columns: [
@@ -859,13 +888,21 @@ async function setupLunchAreaBadgesHistory() {
 
 function initializeLunchAreaBadgesTable() {
     lunchAreaBadgesTable = $('#lunchAreaBadgesTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[2, 'desc'], [3, 'desc']], // Ordina per data e ora decrescente
         columns: [
@@ -960,13 +997,21 @@ async function setupEmployeePhoneDirectory() {
 
 function initializeEmployeePhoneDirectoryTable() {
     employeePhoneDirectoryTable = $('#employeePhoneDirectoryTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [0, 'asc']], // Ordina per cognome, poi per nome
         columns: [
@@ -1113,13 +1158,21 @@ async function setupPeopleList() {
 
 function initializeTodayVisitsTable() {
     todayVisitsTable = $('#todayVisitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 6,
+        autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -1178,13 +1231,21 @@ function initializeTodayVisitsTable() {
 
 function initializeFutureVisitsTable() {
     futureVisitsTable = $('#futureVisitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 6,
+        autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -1243,13 +1304,21 @@ function initializeFutureVisitsTable() {
 
 function initializePeopleTable() {
     peopleTable = $('#peopleTable').DataTable({
+        lengthChange: false,
+        pageLength: 6,
+        autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [0, 'asc']], // Ordina per cognome, poi per nome
         columns: [
@@ -1299,7 +1368,7 @@ function initializePeopleTable() {
                 title: 'Ruolo',
                 data: 'ruolo',
                 render: function (data) {
-                    return data || '';
+                    return data?.descrizione || '';
                 }
             },
             {
@@ -1420,6 +1489,177 @@ async function fetchAndPopulatePeople() {
     }
 }
 
+// Setup present people tables
+function setupPresentPeople() {
+    // Initialize section when the menu item is clicked
+    document.getElementById('visitatori-elenco-presenti').addEventListener('click', async function () {
+        try {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                throw new Error('No access token found');
+            }
+
+            await refreshJwt();
+
+            if (!presentEmployeesTable || !presentVisitorsTable) {
+                setupPresentPeopleTables();
+            } else {
+                // If tables are already initialized, just refresh the data
+                await fetchAndPopulatePresentPeople();
+            }
+        } catch (error) {
+            console.error('Error setting up present people section:', error);
+        }
+    });
+}
+
+function setupPresentPeopleTables() {
+    // Check if tables are already initialized
+    if ($.fn.DataTable.isDataTable('#table-presenti-dipendeti')) {
+        presentEmployeesTable = $('#table-presenti-dipendeti').DataTable();
+    } else {        // Initialize employees table
+        presentEmployeesTable = $('#table-presenti-dipendeti').DataTable({
+            lengthChange: false,
+            pageLength: 6,
+            autoWidth: false,
+            responsive: true,
+            buttons: [
+                'pdf'
+            ],
+            dom: 'Bfrtip',
+            language: {
+                info: "Pagina _PAGE_ di _PAGES_",
+                infoEmpty: "Nessun elemento disponibile",
+                infoFiltered: "(filtrati da _MAX_ elementi totali)",
+                search: "Cerca:",
+                paginate: {
+                    next: ">",
+                    previous: "<"
+                },
+                emptyTable: "Nessun dato presente nella tabella",
+                zeroRecords: "Nessun risultato trovato"
+            },
+            columns: [
+                {
+                    title: 'Nome',
+                    data: 'nome',
+                    render: function (data) {
+                        return data || 'N/A';
+                    }
+                },
+                {
+                    title: 'Cognome',
+                    data: 'cognome',
+                    render: function (data) {
+                        return data || 'N/A';
+                    }
+                },
+                {
+                    title: 'Email',
+                    data: 'mail',
+                    render: function (data) {
+                        return data || 'N/A';
+                    }
+                }
+            ]
+        });    // Check if visitors table is already initialized
+        if ($.fn.DataTable.isDataTable('#table-presenti-visitatori')) {
+            presentVisitorsTable = $('#table-presenti-visitatori').DataTable();
+        } else {            // Initialize visitors table (including maintenance)
+            presentVisitorsTable = $('#table-presenti-visitatori').DataTable({
+                lengthChange: false,
+                pageLength: 6,
+                autoWidth: false,
+                responsive: true,
+                buttons: [
+                    'pdf'
+                ],
+                dom: 'Bfrtip',
+                language: {
+                    info: "Pagina _PAGE_ di _PAGES_",
+                    infoEmpty: "Nessun elemento disponibile",
+                    infoFiltered: "(filtrati da _MAX_ elementi totali)",
+                    search: "Cerca:",
+                    paginate: {
+                        next: ">",
+                        previous: "<"
+                    },
+                    emptyTable: "Nessun dato presente nella tabella",
+                    zeroRecords: "Nessun risultato trovato"
+                },
+                columns: [
+                    {
+                        title: 'Nome',
+                        data: 'nome',
+                        render: function (data) {
+                            return data || 'N/A';
+                        }
+                    },
+                    {
+                        title: 'Cognome',
+                        data: 'cognome',
+                        render: function (data) {
+                            return data || 'N/A';
+                        }
+                    },
+                    {
+                        title: 'Email',
+                        data: 'mail',
+                        render: function (data) {
+                            return data || 'N/A';
+                        }
+                    }
+                ]
+            });
+
+            // Load initial data
+            fetchAndPopulatePresentPeople();
+
+            // Set up auto-refresh every 30 seconds
+            setInterval(fetchAndPopulatePresentPeople, 30000);
+        }
+    }
+}
+async function fetchAndPopulatePresentPeople() {
+    try {
+        const response = await fetch('http://localhost:8080/list/people', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Update employees table
+        if (data.Employees && Array.isArray(data.Employees)) {
+            presentEmployeesTable.clear().rows.add(data.Employees).draw();
+        }
+
+        // Combine visitors and maintenance personnel for visitors table
+        const allVisitors = [
+            ...(data.Visitors || []),
+            ...(data.Maintenance || [])
+        ];
+        presentVisitorsTable.clear().rows.add(allVisitors).draw();
+
+    } catch (error) {
+        console.error('Error loading present people:', error);
+        presentEmployeesTable.clear().draw();
+        presentVisitorsTable.clear().draw();
+
+        // Show error in counts
+        document.querySelectorAll('.employeesCount, .visitorsCount, .totalPresent').forEach(el => {
+            el.textContent = '-';
+        });
+    }
+}
+
 function showTodayVisitDetails(visit) {
     // Populate visitor information
     document.getElementById('todayVisitorName').textContent = visit.personaVisitatore?.nome || '';
@@ -1496,8 +1736,8 @@ function showPersonDetails(person) {
 
     // Populate work information
     document.getElementById('personCompany').textContent = person.azienda || '';
-    document.getElementById('personRole').textContent = person.ruolo || '';
-    document.getElementById('personEmployeeId').textContent = person.idDipendente || '';
+    document.getElementById('personRole').textContent = person.ruolo.descrizione || '';
+    document.getElementById('personEmployeeId').textContent = person.idPersona || '';
 
     // Show modal
     const modal = document.getElementById('personDetailsModal');
