@@ -286,11 +286,7 @@ function initializeEmployeePhoneDirectoryTable() {
         pageLength: 8,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
-        language: {            
+        language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
             infoFiltered: "(filtrati da _MAX_ elementi totali)",
@@ -346,13 +342,9 @@ function initializeEmployeePhoneDirectoryTable() {
 function initializeTodayVisitsTable() {
     todayVisitsTable = $('#todayVisitsTable').DataTable({
         lengthChange: false,
-        pageLength: 8,
+        pageLength: 6,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -418,10 +410,6 @@ function initializeFutureVisitsTable() {
         pageLength: 8,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -487,10 +475,10 @@ function initializeHomeTodayVisitsTable() {
         pageLength: 8,
         autoWidth: false,
         responsive: true,
-        paging: false,
         searching: false,
+        paging: false,
         info: false,
-        ordering: true,
+        ordering: false,
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -503,13 +491,12 @@ function initializeHomeTodayVisitsTable() {
             emptyTable: "Nessun dato presente nella tabella",
             zeroRecords: "Nessun risultato trovato"
         },
-        order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
             {
                 title: 'Visitatore',
                 data: null,
                 render: function (data) {
-                    return `${data.visitatore?.nome || ''} ${data.visitatore?.cognome || ''}`;
+                    return `${data.personaVisitatore?.nome || ''} ${data.personaVisitatore?.cognome || ''}`;
                 }
             },
             {
@@ -518,12 +505,11 @@ function initializeHomeTodayVisitsTable() {
                 render: function (data) {
                     return data ? new Date(data).toLocaleDateString('it-IT') : '';
                 }
-            },
-            {
+            },            {
                 title: 'Ora Inizio',
                 data: 'oraInizio',
                 render: function (data) {
-                    return formatTimeToHourMinute(data);
+                    return formatTimeToHourMinute(data) || '';
                 }
             },
             {
@@ -537,7 +523,7 @@ function initializeHomeTodayVisitsTable() {
                 title: 'Ora Fine',
                 data: 'oraFine',
                 render: function (data) {
-                    return formatTimeToHourMinute(data);
+                    return formatTimeToHourMinute(data) || '';
                 }
             },
             {
@@ -557,10 +543,10 @@ function initializeHomeFutureVisitsTable() {
         pageLength: 8,
         autoWidth: false,
         responsive: true,
-        paging: false,
         searching: false,
+        paging: false,
         info: false,
-        ordering: true,
+        ordering: false,
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -573,7 +559,6 @@ function initializeHomeFutureVisitsTable() {
             emptyTable: "Nessun dato presente nella tabella",
             zeroRecords: "Nessun risultato trovato"
         },
-        order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
             {
                 title: 'Visitatore',
@@ -588,12 +573,11 @@ function initializeHomeFutureVisitsTable() {
                 render: function (data) {
                     return data ? new Date(data).toLocaleDateString('it-IT') : '';
                 }
-            },
-            {
+            },            {
                 title: 'Ora Inizio',
                 data: 'oraInizio',
                 render: function (data) {
-                    return formatTimeToHourMinute(data);
+                    return formatTimeToHourMinute(data) || '';
                 }
             },
             {
@@ -607,7 +591,7 @@ function initializeHomeFutureVisitsTable() {
                 title: 'Ora Fine',
                 data: 'oraFine',
                 render: function (data) {
-                    return formatTimeToHourMinute(data);
+                    return formatTimeToHourMinute(data) || '';
                 }
             },
             {
@@ -922,7 +906,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Handle clicking outside modal to close it
+    // Setup modal close handlers for visit success modal
+    const visitSuccessModal = document.getElementById('visitSuccessModal');
+    const visitSuccessCloseBtn = visitSuccessModal?.querySelector('.close-modal');
+
+    if (visitSuccessCloseBtn) {
+        visitSuccessCloseBtn.onclick = function () {
+            visitSuccessModal.style.display = 'none';
+        }
+    }    // Setup modal close handlers for visit error modal
+    const visitErrorModal = document.getElementById('visitErrorModal');
+    const visitErrorCloseBtn = visitErrorModal?.querySelector('.close-modal');
+
+    if (visitErrorCloseBtn) {
+        visitErrorCloseBtn.onclick = function () {
+            visitErrorModal.style.display = 'none';
+        }
+    }
+
+    // Setup modal close handlers for validation modal
+    const validationModal = document.getElementById('validationModal');
+    const validationCloseBtn = validationModal?.querySelector('.close-modal');
+
+    if (validationCloseBtn) {
+        validationCloseBtn.onclick = function () {
+            validationModal.style.display = 'none';
+        }
+    }    // Handle clicking outside modal to close it
     window.onclick = function (event) {
         if (event.target === todayModal) {
             todayModal.style.display = 'none';
@@ -930,7 +940,35 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target === futureModal) {
             futureModal.style.display = 'none';
         }
-    }
+        if (event.target === visitSuccessModal) {
+            visitSuccessModal.style.display = 'none';
+        }
+        if (event.target === visitErrorModal) {
+            visitErrorModal.style.display = 'none';
+        }
+        if (event.target === validationModal) {
+            validationModal.style.display = 'none';
+        }
+    }    // Add escape key handler for modals
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            if (todayModal && todayModal.style.display === 'block') {
+                todayModal.style.display = 'none';
+            }
+            if (futureModal && futureModal.style.display === 'block') {
+                futureModal.style.display = 'none';
+            }
+            if (visitSuccessModal && visitSuccessModal.style.display === 'block') {
+                visitSuccessModal.style.display = 'none';
+            }
+            if (visitErrorModal && visitErrorModal.style.display === 'block') {
+                visitErrorModal.style.display = 'none';
+            }
+            if (validationModal && validationModal.style.display === 'block') {
+                validationModal.style.display = 'none';
+            }
+        }
+    });
 });
 
 // Setup navigation buttons for home tables
@@ -1151,27 +1189,25 @@ function createVisit(event) {
     const oraInizio = document.getElementById("ora-inizio").value;
     const motivo = document.getElementById("motivo").value;
     const flagAccessoConAutomezzo = document.getElementById("automezzo").checked;
-    const flagDPI = document.getElementById("dpi").checked;
-
-    // Validate required fields
+    const flagDPI = document.getElementById("dpi").checked;    // Validate required fields
     if (!idVisitatore) {
-        alert("Seleziona un visitatore");
+        showValidationModal("Seleziona un visitatore");
         return;
     }
     if (!idResponsabile) {
-        alert("Seleziona un responsabile");
+        showValidationModal("Seleziona un responsabile");
         return;
     }
     if (!dataInizio) {
-        alert("Inserisci la data di inizio");
+        showValidationModal("Inserisci la data di inizio");
         return;
     }
     if (!oraInizio) {
-        alert("Inserisci l'ora di inizio");
+        showValidationModal("Inserisci l'ora di inizio");
         return;
     }
     if (!motivo.trim()) {
-        alert("Inserisci il motivo della visita");
+        showValidationModal("Inserisci il motivo della visita");
         return;
     }
 
@@ -1232,22 +1268,23 @@ async function createVisitFetch(requestBody) {
             // Response is empty or not JSON, but status is OK
             console.log("Visita creata con successo (risposta vuota dal server)");
             responseData = { success: true, message: "Visita creata con successo" };
-        }
-        
-        // Show success message
-        alert("Visita creata con successo!");
+        }          // Show success modal
+        showVisitSuccessModal();
         
         // Reset form
         resetCreateVisitForm();
         
-        // Refresh home tables if they exist
-        if (typeof initializeHomeTables === 'function') {
-            initializeHomeTables();
-        }
-
-    } catch (error) {
+        // Refresh home tables if they exist (without reinitializing)
+        if (homeTodayVisitsTable && homeFutureVisitsTable) {
+            try {
+                await fetchAndPopulateHomeTodayVisits();
+                await fetchAndPopulateHomeFutureVisits();
+            } catch (refreshError) {
+                console.error('Error refreshing home tables:', refreshError);
+            }
+        }    } catch (error) {
         console.error("Errore nella creazione della visita:", error.message);
-        alert(`Errore nella creazione della visita: ${error.message}`);
+        showVisitErrorModal(`Errore nella creazione della visita: ${error.message}`);
     }
 }
 
@@ -1308,4 +1345,51 @@ function initializeDropdownArrows() {
             }
         });
     });
+}
+
+// Show success modal for visit creation
+function showVisitSuccessModal() {
+    const modal = document.getElementById('visitSuccessModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+// Show error modal for visit creation
+function showVisitErrorModal(errorMessage) {
+    const modal = document.getElementById('visitErrorModal');
+    const messageElement = document.getElementById('visitErrorMessage');
+    
+    if (modal && messageElement) {
+        messageElement.textContent = errorMessage || 'Si è verificato un errore durante la creazione della visita.';
+        modal.style.display = 'block';
+    }
+}
+
+// Hide visit modals
+function hideVisitModals() {
+    const successModal = document.getElementById('visitSuccessModal');
+    const errorModal = document.getElementById('visitErrorModal');
+    const validationModal = document.getElementById('validationModal');
+    
+    if (successModal) {
+        successModal.style.display = 'none';
+    }
+    if (errorModal) {
+        errorModal.style.display = 'none';
+    }
+    if (validationModal) {
+        validationModal.style.display = 'none';
+    }
+}
+
+// Show validation modal
+function showValidationModal(message) {
+    const modal = document.getElementById('validationModal');
+    const messageElement = document.getElementById('validationMessage');
+    
+    if (modal && messageElement) {
+        messageElement.textContent = message;
+        modal.style.display = 'block';
+    }
 }
