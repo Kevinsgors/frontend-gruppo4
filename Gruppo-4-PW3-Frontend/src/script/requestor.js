@@ -265,13 +265,25 @@ async function initializeHomeTables() {
 
 function initializeEmployeePhoneDirectoryTable() {
     employeePhoneDirectoryTable = $('#employeePhoneDirectoryTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf'
         ],
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+        language: {            
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [0, 'asc']], // Ordina per cognome, poi per nome
         columns: [
@@ -316,13 +328,25 @@ function initializeEmployeePhoneDirectoryTable() {
 
 function initializeTodayVisitsTable() {
     todayVisitsTable = $('#todayVisitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [            {
@@ -373,13 +397,25 @@ function initializeTodayVisitsTable() {
 
 function initializeFutureVisitsTable() {
     futureVisitsTable = $('#futureVisitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [            {
@@ -430,13 +466,25 @@ function initializeFutureVisitsTable() {
 
 function initializeHomeTodayVisitsTable() {
     homeTodayVisitsTable = $('#homeTodayVisitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
         paging: false,
         searching: false,
         info: false,
         ordering: true,
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -488,13 +536,25 @@ function initializeHomeTodayVisitsTable() {
 
 function initializeHomeFutureVisitsTable() {
     homeFutureVisitsTable = $('#homeFutureVisitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
         paging: false,
         searching: false,
         info: false,
         ordering: true,
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
