@@ -425,11 +425,10 @@ async function setupTodayVisits() {
 
                 await refreshJwt(); // Refresh JWT if needed
                 initializeTodayVisitsTable();
-                await fetchAndPopulateTodayVisits();
-            } catch (error) {
+                await fetchAndPopulateTodayVisits();            } catch (error) {
                 console.error('Error setting up today visits table:', error);
                 // Show error message to the user
-                alert('Errore durante il caricamento delle visite odierne. Riprova più tardi.');
+                showLoadingErrorModal('Errore durante il caricamento delle visite odierne. Riprova più tardi.');
             }
         } else {
             // Refresh data if table already exists
@@ -450,11 +449,10 @@ async function setupFutureVisits() {
 
                 await refreshJwt(); // Refresh JWT if needed
                 initializeFutureVisitsTable();
-                await fetchAndPopulateFutureVisits();
-            } catch (error) {
+                await fetchAndPopulateFutureVisits();            } catch (error) {
                 console.error('Error setting up future visits table:', error);
                 // Show error message to the user
-                alert('Errore durante il caricamento delle visite future. Riprova più tardi.');
+                showLoadingErrorModal('Errore durante il caricamento delle visite future. Riprova più tardi.');
             }
         } else {
             // Refresh data if table already exists
@@ -475,11 +473,10 @@ async function setupPersonalVisits() {
 
                 await refreshJwt(); // Refresh JWT if needed
                 initializePersonalVisitsTable();
-                await fetchAndPopulatePersonalVisits();
-            } catch (error) {
+                await fetchAndPopulatePersonalVisits();            } catch (error) {
                 console.error('Error setting up personal visits table:', error);
                 // Show error message to the user
-                alert('Errore durante il caricamento delle visite personali. Riprova più tardi.');
+                showLoadingErrorModal('Errore durante il caricamento delle visite personali. Riprova più tardi.');
             }
         } else {
             // Refresh data if table already exists
@@ -500,11 +497,10 @@ async function setupPeopleList() {
 
                 await refreshJwt(); // Refresh JWT if needed
                 initializePeopleTable();
-                await fetchAndPopulatePeople();
-            } catch (error) {
+                await fetchAndPopulatePeople();            } catch (error) {
                 console.error('Error setting up people table:', error);
                 // Show error message to the user
-                alert('Errore durante il caricamento dell\'elenco persone. Riprova più tardi.');
+                showLoadingErrorModal('Errore durante il caricamento dell\'elenco persone. Riprova più tardi.');
             }
         } else {
             // Refresh data if table already exists
@@ -876,11 +872,9 @@ async function fetchAndPopulateTodayVisits() {
         // Show message if no visits today
         if (todayVisits.length === 0) {
             console.log('Nessuna visita programmata per oggi');
-        }
-
-    } catch (error) {
+        }    } catch (error) {
         console.error('Error fetching today visits:', error);
-        alert('Errore durante il recupero delle visite odierne.');
+        showLoadingErrorModal('Errore durante il recupero delle visite odierne.');
     }
 }
 
@@ -915,10 +909,9 @@ async function fetchAndPopulateFutureVisits() {
         // Show message if no future visits
         if (futureVisits.length === 0) {
             console.log('Nessuna visita futura programmata');
-        }
-    } catch (error) {
+        }    } catch (error) {
         console.error('Error fetching future visits:', error);
-        alert('Errore durante il recupero delle visite future.');
+        showLoadingErrorModal('Errore durante il recupero delle visite future.');
     }
 }
 
@@ -956,11 +949,9 @@ async function fetchAndPopulatePersonalVisits() {
         // Show message if no personal visits
         if (personalVisits.length === 0) {
             console.log('Nessuna visita personale trovata');
-        }
-
-    } catch (error) {
+        }    } catch (error) {
         console.error('Error fetching personal visits:', error);
-        alert('Errore durante il recupero delle visite personali.');
+        showLoadingErrorModal('Errore durante il recupero delle visite personali.');
     }
 }
 
@@ -985,11 +976,9 @@ async function fetchAndPopulatePeople() {
         // Show message if no people found
         if (people.length === 0) {
             console.log('Nessuna persona trovata nel database');
-        }
-
-    } catch (error) {
+        }    } catch (error) {
         console.error('Error fetching people:', error);
-        alert('Errore durante il recupero dell\'elenco persone.');
+        showLoadingErrorModal('Errore durante il recupero dell\'elenco persone.');
     }
 }
 
@@ -1296,9 +1285,7 @@ document.addEventListener('DOMContentLoaded', function () {
         personCloseBtn.onclick = function () {
             personModal.style.display = 'none';
         }
-    }
-
-    // Setup modal close handlers for personal visits modal
+    }    // Setup modal close handlers for personal visits modal
     const personalModal = document.getElementById('personalVisitDetailsModal');
     const personalCloseBtn = personalModal?.querySelector('.close-modal');
 
@@ -1308,7 +1295,43 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    window.onclick = function (event) {
+    // Setup modal close handlers for operation success modal
+    const operationSuccessModal = document.getElementById('operationSuccessModal');
+    const operationSuccessCloseBtn = operationSuccessModal?.querySelector('.close-modal');
+
+    if (operationSuccessCloseBtn) {
+        operationSuccessCloseBtn.onclick = function () {
+            operationSuccessModal.style.display = 'none';
+        }
+    }
+
+    // Setup modal close handlers for operation error modal
+    const operationErrorModal = document.getElementById('operationErrorModal');
+    const operationErrorCloseBtn = operationErrorModal?.querySelector('.close-modal');
+
+    if (operationErrorCloseBtn) {
+        operationErrorCloseBtn.onclick = function () {
+            operationErrorModal.style.display = 'none';
+        }
+    }    // Setup modal close handlers for loading error modal
+    const loadingErrorModal = document.getElementById('loadingErrorModal');
+    const loadingErrorCloseBtn = loadingErrorModal?.querySelector('.close-modal');
+
+    if (loadingErrorCloseBtn) {
+        loadingErrorCloseBtn.onclick = function () {
+            loadingErrorModal.style.display = 'none';
+        }
+    }
+
+    // Setup modal close handlers for confirmation modal
+    const confirmationModal = document.getElementById('confirmationModal');
+    const confirmationCloseBtn = confirmationModal?.querySelector('.close-modal');
+
+    if (confirmationCloseBtn) {
+        confirmationCloseBtn.onclick = function () {
+            confirmationModal.style.display = 'none';
+        }
+    }    window.onclick = function (event) {
         if (event.target === todayModal) {
             todayModal.style.display = 'none';
         }
@@ -1321,9 +1344,19 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target === personalModal) {
             personalModal.style.display = 'none';
         }
-    }
-
-    // Add escape key handler for modals
+        if (event.target === operationSuccessModal) {
+            operationSuccessModal.style.display = 'none';
+        }
+        if (event.target === operationErrorModal) {
+            operationErrorModal.style.display = 'none';
+        }
+        if (event.target === loadingErrorModal) {
+            loadingErrorModal.style.display = 'none';
+        }
+        if (event.target === confirmationModal) {
+            confirmationModal.style.display = 'none';
+        }
+    }// Add escape key handler for modals
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
             if (todayModal && todayModal.style.display === 'block') {
@@ -1337,6 +1370,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (personalModal && personalModal.style.display === 'block') {
                 personalModal.style.display = 'none';
+            }
+            if (operationSuccessModal && operationSuccessModal.style.display === 'block') {
+                operationSuccessModal.style.display = 'none';
+            }
+            if (operationErrorModal && operationErrorModal.style.display === 'block') {
+                operationErrorModal.style.display = 'none';
+            }            if (loadingErrorModal && loadingErrorModal.style.display === 'block') {
+                loadingErrorModal.style.display = 'none';
+            }
+            if (confirmationModal && confirmationModal.style.display === 'block') {
+                confirmationModal.style.display = 'none';
             }
         }
     });
@@ -1455,10 +1499,13 @@ async function fetchAndPopulateVisits() {
 }
 
 async function deleteVisit(visitId) {
-    // Ask for confirmation before deleting
-    if (!confirm('Sei sicuro di voler eliminare questa visita?')) {
-        return;
-    }
+    // Show confirmation modal before deleting
+    showConfirmationModal('Sei sicuro di voler eliminare questa visita?', async function() {
+        await performDeleteVisit(visitId);
+    });
+}
+
+async function performDeleteVisit(visitId) {
 
     try {
         const response = await fetch(`http://localhost:8080/visit/${visitId}`, {
@@ -1500,29 +1547,28 @@ async function deleteVisit(visitId) {
                     }
                 });
                 futureTable.draw(false);
-            }
-
-            // Show success message
-            alert('Visita eliminata con successo!');
+            }            // Show success message
+            showOperationSuccessModal('Visita eliminata con successo!');
 
             // Update counts if needed
             await updatePeopleCount();
         } else {
             throw new Error('Eliminazione non riuscita');
-        }
-    } catch (error) {
+        }    } catch (error) {
         console.error('Error deleting visit:', error);
-        alert('Errore durante l\'eliminazione della visita. Riprova più tardi.');
+        showOperationErrorModal('Errore durante l\'eliminazione della visita. Riprova più tardi.');
     }
 }
 
 // Handle person deletion based on @DELETE /person/{idPersona} endpoint
 async function deletePerson(idPersona) {
-    // Ask for confirmation before deleting
-    if (!confirm('Sei sicuro di voler eliminare questa persona?')) {
-        return;
-    }
+    // Show confirmation modal before deleting
+    showConfirmationModal('Sei sicuro di voler eliminare questa persona?', async function() {
+        await performDeletePerson(idPersona);
+    });
+}
 
+async function performDeletePerson(idPersona) {
     try {
         const response = await fetch(`http://localhost:8080/person/${idPersona}`, {
             method: 'DELETE',
@@ -1549,16 +1595,13 @@ async function deletePerson(idPersona) {
                     this.remove();
                 }
             });
-            peopleTable.draw(false);
-
-            // Show success message
-            alert('Persona eliminata con successo!');
+            peopleTable.draw(false);            // Show success message
+            showOperationSuccessModal('Persona eliminata con successo!');
         } else {
             throw new Error('Eliminazione non riuscita');
-        }
-    } catch (error) {
+        }    } catch (error) {
         console.error('Error deleting person:', error);
-        alert('Errore durante l\'eliminazione della persona. Riprova più tardi.');
+        showOperationErrorModal('Errore durante l\'eliminazione della persona. Riprova più tardi.');
     }
 }
 
@@ -2110,11 +2153,9 @@ async function startVisit(visitId) {
         });
 
         // Ridisegna la tabella per applicare le modifiche
-        table.draw(false);
-
-    } catch (error) {
+        table.draw(false);    } catch (error) {
         console.error('Error starting visit:', error);
-        alert('Errore durante l\'avvio della visita. Riprova più tardi.');
+        showOperationErrorModal('Errore durante l\'avvio della visita. Riprova più tardi.');
     }
 }
 
@@ -2157,119 +2198,93 @@ async function endVisit(visitId) {
         table.draw(false);
 
         // Aggiorna il conteggio delle persone presenti
-        await updatePeopleCount();
-
-    } catch (error) {
+        await updatePeopleCount();    } catch (error) {
         console.error('Error ending visit:', error);
-        alert('Errore durante la chiusura della visita. Riprova più tardi.');
+        showOperationErrorModal('Errore durante la chiusura della visita. Riprova più tardi.');
     }
 }
 
-// Handle visit deletion based on @DELETE /{id} endpoint
-async function deleteVisit(visitId) {
-    // Ask for confirmation before deleting
-    if (!confirm('Sei sicuro di voler eliminare questa visita?')) {
-        return;
-    }
-
-    try {
-        const response = await fetch(`http://localhost:8080/visit/${visitId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                'Content-Type': 'application/json',
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const deleted = await response.json();
-        
-        if (deleted) {
-            // Update both today and future visits tables if they exist
-            const todayTable = $('#todayVisitsTable').DataTable();
-            const futureTable = $('#futureVisitsTable').DataTable();
-
-            // Remove the visit from today's table if it exists
-            if (todayTable) {
-                todayTable.rows().every(function() {
-                    const rowData = this.data();
-                    if (rowData.id === visitId) {
-                        this.remove();
-                    }
-                });
-                todayTable.draw(false);
-            }
-
-            // Remove the visit from future table if it exists
-            if (futureTable) {
-                futureTable.rows().every(function() {
-                    const rowData = this.data();
-                    if (rowData.id === visitId) {
-                        this.remove();
-                    }
-                });
-                futureTable.draw(false);
-            }
-
-            // Show success message
-            alert('Visita eliminata con successo!');
-
-            // Update counts if needed
-            await updatePeopleCount();
-        } else {
-            throw new Error('Eliminazione non riuscita');
-        }
-    } catch (error) {
-        console.error('Error deleting visit:', error);
-        alert('Errore durante l\'eliminazione della visita. Riprova più tardi.');
+// Show success modal for operations
+function showOperationSuccessModal(message) {
+    const modal = document.getElementById('operationSuccessModal');
+    const messageElement = document.getElementById('operationSuccessMessage');
+    
+    if (modal && messageElement) {
+        messageElement.textContent = message || 'Operazione completata con successo!';
+        modal.style.display = 'block';
     }
 }
 
-// Handle person deletion based on @DELETE /person/{idPersona} endpoint
-async function deletePerson(idPersona) {
-    // Ask for confirmation before deleting
-    if (!confirm('Sei sicuro di voler eliminare questa persona?')) {
-        return;
+// Show error modal for operations
+function showOperationErrorModal(errorMessage) {
+    const modal = document.getElementById('operationErrorModal');
+    const messageElement = document.getElementById('operationErrorMessage');
+    
+    if (modal && messageElement) {
+        messageElement.textContent = errorMessage || 'Si è verificato un errore durante l\'operazione.';
+        modal.style.display = 'block';
     }
+}
 
-    try {
-        const response = await fetch(`http://localhost:8080/person/${idPersona}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                'Content-Type': 'application/json',
-            }
-        });
+// Show loading error modal
+function showLoadingErrorModal(errorMessage) {
+    const modal = document.getElementById('loadingErrorModal');
+    const messageElement = document.getElementById('loadingErrorMessage');
+    
+    if (modal && messageElement) {
+        messageElement.textContent = errorMessage || 'Errore durante il caricamento dei dati.';
+        modal.style.display = 'block';
+    }
+}
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+// Hide all admin modals
+function hideAdminModals() {
+    const successModal = document.getElementById('operationSuccessModal');
+    const errorModal = document.getElementById('operationErrorModal');
+    const loadingErrorModal = document.getElementById('loadingErrorModal');
+    const confirmationModal = document.getElementById('confirmationModal');
+    
+    if (successModal) {
+        successModal.style.display = 'none';
+    }
+    if (errorModal) {
+        errorModal.style.display = 'none';
+    }
+    if (loadingErrorModal) {
+        loadingErrorModal.style.display = 'none';
+    }
+    if (confirmationModal) {
+        confirmationModal.style.display = 'none';
+    }
+}
 
-        const deleted = await response.json();
+// Show confirmation modal for dangerous operations
+function showConfirmationModal(message, onConfirm) {
+    const modal = document.getElementById('confirmationModal');
+    const messageElement = document.getElementById('confirmationMessage');
+    const confirmButton = document.getElementById('confirmButton');
+    const cancelButton = document.getElementById('cancelButton');
+    
+    if (modal && messageElement && confirmButton && cancelButton) {
+        messageElement.textContent = message || 'Sei sicuro di voler procedere?';
+        modal.style.display = 'block';
         
-        if (deleted) {
-            // Update the people table
-            const peopleTable = $('#peopleTable').DataTable();
-            
-            // Remove the person from the table
-            peopleTable.rows().every(function() {
-                const rowData = this.data();
-                if (rowData.idPersona === idPersona) {
-                    this.remove();
-                }
-            });
-            peopleTable.draw(false);
-
-            // Show success message
-            alert('Persona eliminata con successo!');
-        } else {
-            throw new Error('Eliminazione non riuscita');
-        }
-    } catch (error) {
-        console.error('Error deleting person:', error);
-        alert('Errore durante l\'eliminazione della persona. Riprova più tardi.');
+        // Remove any existing event listeners
+        confirmButton.replaceWith(confirmButton.cloneNode(true));
+        cancelButton.replaceWith(cancelButton.cloneNode(true));
+        
+        // Get the new button references after cloning
+        const newConfirmButton = document.getElementById('confirmButton');
+        const newCancelButton = document.getElementById('cancelButton');
+        
+        // Add event listeners
+        newConfirmButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+            if (onConfirm) onConfirm();
+        });
+        
+        newCancelButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
     }
 }

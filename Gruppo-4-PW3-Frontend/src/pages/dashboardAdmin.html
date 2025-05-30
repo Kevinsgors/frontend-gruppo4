@@ -76,7 +76,6 @@
             <!-- User Info -->
             <div class="user-box">
                 <div class="avatar-bg"></div>
-                <img class="avatar" src="/src/assets/utente.png" alt="User Avatar">
                 <div class="user-name">Nome e Cognome</div>
                 <button class="action-button" onclick="logout()">Logout</button>
             </div>
@@ -157,7 +156,7 @@
             <section id="admin-visualizza-elenco-visite-odierne-section" class="section">
                 <h2>Elenco Visite Odierne</h2>
                 <div class="table-container">
-                    <table id="todayVisitsTable" class="display" style="width:100%">
+                    <table id="todayVisitsTable" class="display custom-table" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Visitatore</th>
@@ -508,8 +507,84 @@
                         </thead>
                     </table>
                 </div>
-            </section>
-        </main>
+            </section>        </main>
+    </div>
+
+    <!-- Modal Success Operazione -->
+    <div id="operationSuccessModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Operazione Completata</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="details-grid">
+                    <div class="detail-section">
+                        <h4 style="color: #28a745; border-bottom-color: #28a745;">✓ Successo</h4>
+                        <p id="operationSuccessMessage">Operazione completata con successo!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Error Operazione -->
+    <div id="operationErrorModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Errore Operazione</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="details-grid">
+                    <div class="detail-section">
+                        <h4 style="color: #dc3545; border-bottom-color: #dc3545;">⚠ Errore</h4>
+                        <p id="operationErrorMessage">Si è verificato un errore durante l'operazione.</p>
+                        <p>Per favore riprova o contatta l'amministratore del sistema.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Error Caricamento -->
+    <div id="loadingErrorModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Errore Caricamento</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="details-grid">                    <div class="detail-section">
+                        <h4 style="color: #ffc107; border-bottom-color: #ffc107;">⚠ Attenzione</h4>
+                        <p id="loadingErrorMessage">Errore durante il caricamento dei dati.</p>
+                        <p>Riprova più tardi o contatta l'amministratore.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Conferma Eliminazione -->
+    <div id="confirmationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Conferma Eliminazione</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="details-grid">
+                    <div class="detail-section">
+                        <h4 style="color: #dc3545; border-bottom-color: #dc3545;">⚠ Attenzione</h4>
+                        <p id="confirmationMessage">Sei sicuro di voler procedere con l'eliminazione?</p>
+                        <p>Questa azione non può essere annullata.</p>                        <div class="modal-buttons">
+                            <button id="confirmButton" class="btn-danger">Elimina</button>
+                            <button id="cancelButton" class="btn-secondary">Annulla</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>

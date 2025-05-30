@@ -152,7 +152,7 @@ body {
     margin-top: auto;
     margin-left: 10%;
     width: 80%;
-    background-color: #7C8BA6;
+    background-color: transparent;
     border-radius: 16px;
     padding: 20px 10px;
     text-align: center;
@@ -175,7 +175,7 @@ body {
 .user-name {
     font-size: 14px;
     margin-bottom: 6px;
-    color: #0A1429;
+    color: transparent;
     font-weight: bold;
 }
 
@@ -204,6 +204,50 @@ body {
  
 .action-button:hover {
     background-color: #405577;
+}
+
+/* Danger button for destructive actions */
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    min-width: 120px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.btn-danger:active {
+    transform: translateY(0);
+}
+
+/* Modal buttons container */
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.modal-buttons .btn-danger,
+.modal-buttons .btn-secondary {
+    flex: 1;
+    max-width: 150px;
+    margin: 0;
 }
  
 .dt-buttons .dt-button {
