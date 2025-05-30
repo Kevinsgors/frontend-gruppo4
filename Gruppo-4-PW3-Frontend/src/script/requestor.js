@@ -343,7 +343,7 @@ function initializeTodayVisitsTable() {
                 title: 'Ora Inizio',
                 data: 'oraInizio',
                 render: function (data) {
-                    return data || '';
+                    return formatTimeToHourMinute(data);
                 }
             },
             {
@@ -357,7 +357,7 @@ function initializeTodayVisitsTable() {
                 title: 'Ora Fine',
                 data: 'oraFine',
                 render: function (data) {
-                    return data || '';
+                    return formatTimeToHourMinute(data);
                 }
             },
             {
@@ -400,7 +400,7 @@ function initializeFutureVisitsTable() {
                 title: 'Ora Inizio',
                 data: 'oraInizio',
                 render: function (data) {
-                    return data || '';
+                    return formatTimeToHourMinute(data);
                 }
             },
             {
@@ -414,7 +414,7 @@ function initializeFutureVisitsTable() {
                 title: 'Ora Fine',
                 data: 'oraFine',
                 render: function (data) {
-                    return data || '';
+                    return formatTimeToHourMinute(data);
                 }
             },
             {
@@ -458,7 +458,7 @@ function initializeHomeTodayVisitsTable() {
                 title: 'Ora Inizio',
                 data: 'oraInizio',
                 render: function (data) {
-                    return data || '';
+                    return formatTimeToHourMinute(data);
                 }
             },
             {
@@ -472,7 +472,7 @@ function initializeHomeTodayVisitsTable() {
                 title: 'Ora Fine',
                 data: 'oraFine',
                 render: function (data) {
-                    return data || '';
+                    return formatTimeToHourMinute(data);
                 }
             },
             {
@@ -516,7 +516,7 @@ function initializeHomeFutureVisitsTable() {
                 title: 'Ora Inizio',
                 data: 'oraInizio',
                 render: function (data) {
-                    return data || '';
+                    return formatTimeToHourMinute(data);
                 }
             },
             {
@@ -530,7 +530,7 @@ function initializeHomeFutureVisitsTable() {
                 title: 'Ora Fine',
                 data: 'oraFine',
                 render: function (data) {
-                    return data || '';
+                    return formatTimeToHourMinute(data);
                 }
             },
             {
@@ -777,8 +777,8 @@ function showTodayVisitDetails(visit) {
     // Format and populate dates
     const startDate = visit.dataInizio ? new Date(visit.dataInizio) : null;
     const endDate = visit.dataFine ? new Date(visit.dataFine) : null;
-    const startTime = visit.oraInizio || '';
-    const endTime = visit.oraFine || '';
+    const startTime = formatTimeToHourMinute(visit.oraInizio);
+    const endTime = formatTimeToHourMinute(visit.oraFine);
 
     document.getElementById('todayStartDate').textContent = startDate ?
         `${startDate.toLocaleDateString('it-IT')} ${startTime}` : '';
@@ -805,8 +805,8 @@ function showFutureVisitDetails(visit) {
     // Format and populate dates
     const startDate = visit.dataInizio ? new Date(visit.dataInizio) : null;
     const endDate = visit.dataFine ? new Date(visit.dataFine) : null;
-    const startTime = visit.oraInizio || '';
-    const endTime = visit.oraFine || '';
+    const startTime = formatTimeToHourMinute(visit.oraInizio);
+    const endTime = formatTimeToHourMinute(visit.oraFine);
 
     document.getElementById('futureStartDate').textContent = startDate ?
         `${startDate.toLocaleDateString('it-IT')} ${startTime}` : '';
@@ -910,5 +910,50 @@ function setupHomeNavigationButtons() {
                 await fetchAndPopulateFutureVisits();
             }
         });
+    }
+}
+
+// Utility function to format time to HH:MM format
+function formatTimeToHourMinute(timeString) {
+    if (!timeString || timeString.trim() === '') {
+        return '';
+    }
+
+    try {
+        // Handle different time formats
+        let cleanTime = timeString.trim();
+        
+        // If it's in HH:MM format already, return as is
+        if (/^\d{1,2}:\d{2}$/.test(cleanTime)) {
+            const [hours, minutes] = cleanTime.split(':');
+            return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+        }
+        
+        // If it's in HH:MM:SS format, extract hours and minutes
+        if (/^\d{1,2}:\d{2}:\d{2}$/.test(cleanTime)) {
+            const [hours, minutes] = cleanTime.split(':');
+            return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+        }
+        
+        // If it's in HH:MM:SS.mmm format (with milliseconds), extract hours and minutes
+        if (/^\d{1,2}:\d{2}:\d{2}\.\d+$/.test(cleanTime)) {
+            const [hours, minutes] = cleanTime.split(':');
+            return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+        }
+        
+        // Try to parse as Date object if it's a full datetime string
+        const date = new Date(timeString);
+        if (!isNaN(date.getTime())) {
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+        
+        // If nothing matches, return the original string
+        return timeString;
+        
+    } catch (error) {
+        console.warn('Error formatting time:', timeString, error);
+        return timeString;
     }
 }
