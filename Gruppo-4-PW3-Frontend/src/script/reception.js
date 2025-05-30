@@ -4,6 +4,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     initializeMenus();
     initializeSectionNavigation();
+    setupHomeDashboard();
     setupVisitsHistory();
     setupEmployeeBadgesHistory();
     setupVisitorBadgesHistory();
@@ -12,7 +13,233 @@ document.addEventListener('DOMContentLoaded', function () {
     setupTodayVisits();
     setupFutureVisits();
     setupPeopleList();
+    updatePeopleCount();
 });
+
+// Setup Home Dashboard functionality
+async function setupHomeDashboard() {
+    try {
+        // Initialize home dashboard tables
+        initializeHomeDashboardTables();
+        
+        // Setup navigation buttons
+        setupHomeDashboardNavigation();
+        
+        // Load initial data if home section is visible
+        const homeSection = document.getElementById('admin-home-section');
+        if (homeSection && homeSection.classList.contains('active')) {
+            await loadHomeDashboard();
+        }
+    } catch (error) {
+        console.error('Error setting up home dashboard:', error);
+    }
+}
+
+function initializeHomeDashboardTables() {
+    // Initialize home today visits table (summary version)
+    homeTodayVisitsTable = $('#homeTodayVisitsTable').DataTable({
+        responsive: true,
+        searching: false,
+        paging: false,
+        info: false,
+        ordering: false,
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
+            emptyTable: 'Nessuna visita per oggi'
+        },
+        columns: [
+            {
+                title: 'Visitatore',
+                data: null,
+                render: function (data) {
+                    return `${data.personaVisitatore?.nome || ''} ${data.personaVisitatore?.cognome || ''}`;
+                }
+            },
+            {
+                title: 'Data Inizio',
+                data: 'dataInizio',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleDateString('it-IT') : '';
+                }
+            },
+            {
+                title: 'Ora Inizio',
+                data: 'oraInizio',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Data Fine',
+                data: 'dataFine',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleDateString('it-IT') : '';
+                }
+            },
+            {
+                title: 'Ora Fine',
+                data: 'oraFine',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Dipendente',
+                data: null,
+                render: function (data) {
+                    return `${data.responsabile?.nome || ''} ${data.responsabile?.cognome || ''}`;
+                }
+            }
+        ]
+    });
+
+    // Initialize home future visits table (summary version)
+    homeFutureVisitsTable = $('#homeFutureVisitsTable').DataTable({
+        responsive: true,
+        searching: false,
+        paging: false,
+        info: false,
+        ordering: false,
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
+            emptyTable: 'Nessuna visita futura'
+        },
+        columns: [
+            {
+                title: 'Visitatore',
+                data: null,
+                render: function (data) {
+                    return `${data.personaVisitatore?.nome || ''} ${data.personaVisitatore?.cognome || ''}`;
+                }
+            },
+            {
+                title: 'Data Inizio',
+                data: 'dataInizio',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleDateString('it-IT') : '';
+                }
+            },
+            {
+                title: 'Ora Inizio',
+                data: 'oraInizio',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Data Fine',
+                data: 'dataFine',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleDateString('it-IT') : '';
+                }
+            },
+            {
+                title: 'Ora Fine',
+                data: 'oraFine',
+                render: function (data) {
+                    return data || '';
+                }
+            },
+            {
+                title: 'Dipendente',
+                data: null,
+                render: function (data) {
+                    return `${data.responsabile?.nome || ''} ${data.responsabile?.cognome || ''}`;
+                }
+            }
+        ]
+    });
+}
+
+function setupHomeDashboardNavigation() {
+    // Navigation for "Visualizza tutto" buttons
+    const viewAllTodayBtn = document.getElementById('viewAllTodayBtn');
+    const viewAllFutureBtn = document.getElementById('viewAllFutureBtn');
+    const createUserBtn = document.getElementById('createUserBtn');
+
+    if (viewAllTodayBtn) {
+        viewAllTodayBtn.addEventListener('click', function() {
+            // Navigate to today visits section
+            showSection('admin-visualizza-elenco-visite-odierne-section');
+            // Trigger the menu item click to load data
+            const todayVisitsMenuItem = document.getElementById('visualizza-elenco-visite-odierne');
+            if (todayVisitsMenuItem) {
+                todayVisitsMenuItem.click();
+            }
+        });
+    }
+
+    if (viewAllFutureBtn) {
+        viewAllFutureBtn.addEventListener('click', function() {
+            // Navigate to future visits section
+            showSection('admin-visualizza-elenco-visite-future-section');
+            // Trigger the menu item click to load data
+            const futureVisitsMenuItem = document.getElementById('visualizza-elenco-visite-future');
+            if (futureVisitsMenuItem) {
+                futureVisitsMenuItem.click();
+            }
+        });
+    }
+
+    if (createUserBtn) {
+        createUserBtn.addEventListener('click', function() {
+            // Navigate to create people section
+            showSection('admin-visitatori-crea-persone-section');
+        });
+    }
+}
+
+async function loadHomeDashboard() {
+    try {
+        await Promise.all([
+            loadHomeDashboardData()
+        ]);
+    } catch (error) {
+        console.error('Error loading home dashboard:', error);
+    }
+}
+
+async function loadHomeDashboardData() {
+    try {
+        const response = await fetch('http://localhost:8080/visit', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const allVisits = await response.json();
+
+        // Filter visits for today
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0];
+
+        const todayVisits = allVisits.filter(visit => {
+            if (!visit.dataInizio) return false;
+            const visitDate = new Date(visit.dataInizio).toISOString().split('T')[0];
+            return visitDate === todayString;
+        });
+
+        // Filter visits for future dates
+        const futureVisits = allVisits.filter(visit => {
+            if (!visit.dataInizio) return false;
+            const visitDate = new Date(visit.dataInizio).toISOString().split('T')[0];
+            return visitDate > todayString;
+        });
+
+        // Populate home tables with limited data (first 5 entries)
+        homeTodayVisitsTable.clear().rows.add(todayVisits.slice(0, 5)).draw();
+        homeFutureVisitsTable.clear().rows.add(futureVisits.slice(0, 5)).draw();
+
+    } catch (error) {
+        console.error('Error loading home dashboard data:', error);
+    }
+}
 
 // Initialize dropdown menu functionality
 function initializeMenus() {
@@ -1333,3 +1560,39 @@ document.getElementById('createPersonForm')?.addEventListener('submit', async fu
         alert('Errore durante la creazione della persona. Per favore riprova.');
     }
 });
+
+// Function to update people counts in the home section
+async function updatePeopleCount() {
+    try {
+        const response = await fetch('http://localhost:8080/list/count', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Calculate total present (sum of all values)
+        const totalPresent = Object.values(data).reduce((sum, count) => sum + count, 0);
+        
+        // Get employees count directly
+        const employeesCount = data.Employees;
+        
+        // Calculate visitors count (Visitors + Maintenance)
+        const visitorsCount = (data.Visitors || 0) + (data.Maintenance || 0);
+
+        // Update the display
+        document.getElementById('totalPresent').textContent = totalPresent;
+        document.getElementById('employeesCount').textContent = employeesCount;
+        document.getElementById('visitorsCount').textContent = visitorsCount;
+
+    } catch (error) {
+        console.error('Error fetching people count:', error);
+    }
+}

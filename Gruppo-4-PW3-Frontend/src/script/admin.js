@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setupLunchAreaBadgesHistory();
     setupPeopleList();
     setupEmployeePhoneDirectory();
+    updatePeopleCount();
 });
 
 // Initialize dropdown menu functionality
@@ -1564,5 +1565,41 @@ async function fetchAndPopulatePhoneDirectory() {
 
     } catch (error) {
         console.error('Error fetching phone directory:', error);
+    }
+}
+
+// Function to update people counts in the home section
+async function updatePeopleCount() {
+    try {
+        const response = await fetch('http://localhost:8080/list/count', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Calculate total present (sum of all values)
+        const totalPresent = Object.values(data).reduce((sum, count) => sum + count, 0);
+        
+        // Get employees count directly
+        const employeesCount = data.Employees;
+        
+        // Calculate visitors count (Visitors + Maintenance)
+        const visitorsCount = (data.Visitors || 0) + (data.Maintenance || 0);
+
+        // Update the display
+        document.getElementById('totalPresent').textContent = totalPresent;
+        document.getElementById('employeesCount').textContent = employeesCount;
+        document.getElementById('visitorsCount').textContent = visitorsCount;
+
+    } catch (error) {
+        console.error('Error fetching people count:', error);
     }
 }
