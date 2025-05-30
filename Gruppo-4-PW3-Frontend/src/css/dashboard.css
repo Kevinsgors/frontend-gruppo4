@@ -387,19 +387,27 @@ body {
 }
  
 .close-modal {
-    font-size: 28px;
-    font-weight: bold;
-    color: #aaa;
+    background: #1b2b48 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    transition: background 0.2s !important;
+    font-size: 13px !important;
+    padding: 6px 12px !important;
+    height: 32px !important;
+    min-width: 80px !important;
     cursor: pointer;
-    padding: 0;
-    background: none;
-    border: none;
+    font-weight: normal;
     line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
  
 .close-modal:hover,
 .close-modal:focus {
-    color: #000;
+    background: #405577 !important;
+    color: #fff !important;
 }
  
 .modal-body {
@@ -1164,4 +1172,145 @@ div.dt-container.dt-empty-footer tbody > tr:last-child > * {
         height: 40px;
         font-size: 13px;
     }
+}
+
+/* Edit button styling */
+.edit-button {
+    background-color: #28a745 !important; /* Green color for edit */
+    margin-left: 5px;
+}
+
+.edit-button:hover {
+    background-color: #218838 !important; /* Darker green on hover */
+}
+
+/* Action buttons container for proper spacing */
+.action-button + .action-button {
+    margin-left: 5px;
+}
+
+/* =====================
+   MODAL FOOTER STYLING
+   ===================== */
+.modal-footer {
+    padding: 20px 30px;
+    border-top: 1px solid #e9ecef;
+    background-color: #f8f9fa;
+    border-radius: 0 0 15px 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+}
+
+.modal-footer .action-button {
+    background: #28a745 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    transition: background 0.2s !important;
+    font-size: 13px !important;
+    padding: 6px 12px !important;
+    height: 32px !important;
+    min-width: 120px !important;
+    cursor: pointer;
+    font-weight: normal;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.modal-footer .action-button:hover {
+    background: #218838 !important;
+}
+
+.modal-footer .close-modal {
+    margin: 0;
+}
+
+/* =====================
+   EDIT MODAL FORM STYLING
+   ===================== */
+
+/* Style labels in edit modal to match form-group structure */
+.modal-body label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0A1429;
+}
+
+/* Style inputs in edit modal to match form inputs */
+.modal-body label input[type="text"],
+.modal-body label input[type="date"],
+.modal-body label input[type="time"],
+.modal-body label select {
+    width: 100%;
+    height: 42px;
+    padding: 10px 15px;
+    border: 2px solid #d9d9d9;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+    margin-top: 8px;
+}
+
+/* Focus states for edit modal inputs */
+.modal-body label input[type="text"]:focus,
+.modal-body label input[type="date"]:focus,
+.modal-body label input[type="time"]:focus,
+.modal-body label select:focus {
+    outline: none;
+    border-color: #405577;
+    box-shadow: 0 0 0 3px rgba(64, 85, 119, 0.1);
+}
+
+/* Checkbox styling in edit modal */
+.modal-body label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 8px;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: #405577;
+    border: 2px solid #d9d9d9;
+    border-radius: 4px;
+}
+
+/* Checkbox container styling for edit modal */
+.modal-body label:has(input[type="checkbox"]) {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Select dropdown styling in edit modal */
+.modal-body label select {
+    cursor: pointer;
+    background-image: url(/src/assets/down_arrow_black.png);
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 35px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: background-image 0.2s ease;
+}
+
+/* Hidden input styling */
+.modal-body label input[type="hidden"] {
+    display: none;
+}
+
+/* Override inline styles for proper footer alignment */
+.modal-footer[style*="text-align"] {
+    text-align: inherit !important;
 }

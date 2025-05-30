@@ -385,19 +385,24 @@ function initializeTodayVisitsTable() {
                 render: function (data) {
                     return data ? new Date(data).toLocaleDateString('it-IT') : '';
                 }
-            },
-            {
+            },            {
                 title: 'Ora Fine',
                 data: 'oraFine',
                 render: function (data) {
                     return formatTimeToHourMinute(data);
                 }
-            },
-            {
-                title: 'Azioni',
+            },            {
+                title: 'Dettagli',
                 data: null,
                 render: function (data, type, row) {
                     return `<button onclick='showTodayVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                }
+            },
+            {
+                title: 'Modifica',
+                data: null,
+                render: function (data, type, row) {
+                    return `<button onclick='showTodayVisitEditModal(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button edit-button">Modifica</button>`;
                 }
             }
         ]
@@ -884,6 +889,116 @@ function showFutureVisitDetails(visit) {
     modal.style.display = 'block';
 }
 
+// Show the edit modal and populate fields
+function showTodayVisitEditModal(visit) {
+    populateEditVisitSelects(visit);
+ 
+    document.getElementById('editStartDate').value = visit.dataInizio ? visit.dataInizio.split('T')[0] : '';
+    document.getElementById('editStartTime').value = visit.oraInizio || '';
+    document.getElementById('editVisitReason').value = visit.motivo || '';
+    document.getElementById('editVisitDPI').checked = !!visit.flagDPI;
+    document.getElementById('editVisitCar').checked = !!visit.accessoConAutomezzo;
+ 
+    document.getElementById('editVisitId').value = visit.id || '';
+    document.getElementById('todayVisitEditModal').style.display = 'block';
+}
+ 
+// Popola i select del modal di modifica visita odierna
+async function populateEditVisitSelects(selectedVisit) {
+    const peopleUrl = "http://localhost:8080/people";
+    const itProvisionUrl = "http://localhost:8080/it-provision";
+    const accessToken = localStorage.getItem("accessToken");
+    const visitors = [];
+    const employees = [];
+ 
+    try {
+        // Persone
+        const peopleResponse = await fetch(peopleUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + accessToken
+            }
+        });
+ 
+        if (!peopleResponse.ok) {
+            throw new Error(`Errore nel recupero dei dati: ${peopleResponse.status}`);
+        }
+ 
+        const peopleData = await peopleResponse.json();
+ 
+        peopleData.forEach(person => {
+            if (person.azienda === "Secondo Mona") {
+                employees.push(person);
+            } else {
+                visitors.push(person);
+            }
+        });
+ 
+        // Popola select visitatore
+        const visitorSelect = document.getElementById("editVisitIdPersona");
+        if (visitorSelect) {
+            visitorSelect.innerHTML = "<option></option>";
+            visitors.forEach(visitor => {
+                const option = document.createElement("option");
+                option.innerHTML = `${visitor.nome} ${visitor.cognome} - ${visitor.azienda} - ${(visitor.email || visitor.mail || '')}`;
+                option.value = visitor.idPersona;
+                if (selectedVisit?.visitatore?.idPersona === visitor.idPersona) {
+                    option.selected = true;
+                }
+                visitorSelect.appendChild(option);
+            });
+        }
+ 
+        // Popola select responsabile
+        const employeeSelect = document.getElementById("editVisitIdResponsabile");
+        if (employeeSelect) {
+            employeeSelect.innerHTML = "<option></option>";
+            employees.forEach(employee => {
+                const option = document.createElement("option");
+                option.innerHTML = `${employee.nome} ${employee.cognome} - ${employee.azienda} - ${(employee.email || employee.mail || '')}`;
+                option.value = employee.idPersona;
+                if (selectedVisit?.responsabile?.idPersona === employee.idPersona) {
+                    option.selected = true;
+                }
+                employeeSelect.appendChild(option);
+            });
+        }
+ 
+        // Materiale informatico
+        const itProvisionResponse = await fetch(itProvisionUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + accessToken
+            }
+        });
+ 
+        if (!itProvisionResponse.ok) {
+            throw new Error(`Errore nel recupero dei dati: ${itProvisionResponse.status}`);
+        }
+ 
+        const itProvisionData = await itProvisionResponse.json();
+ 
+        const itProvisionSelect = document.getElementById("editVisitIdMaterialeInformatico");
+        if (itProvisionSelect) {
+            itProvisionSelect.innerHTML = "<option></option>";
+            itProvisionData.forEach(itProvision => {
+                const option = document.createElement("option");
+                option.innerHTML = `${itProvision.tipologia} - ${itProvision.marca} - ${itProvision.seriale}`;
+                option.value = itProvision.id;
+                if (selectedVisit?.materialeInformatico?.id === itProvision.id) {
+                    option.selected = true;
+                }
+                itProvisionSelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error("Errore nel popolamento dei select del modal di modifica visita:", error.message);
+        showVisitErrorModal("Errore durante il caricamento dei dati per la modifica della visita");
+    }
+}
+ 
 // Modal close functionality
 document.addEventListener('DOMContentLoaded', function () {
     // Setup modal close handlers for today visits modal
@@ -932,7 +1047,18 @@ document.addEventListener('DOMContentLoaded', function () {
         validationCloseBtn.onclick = function () {
             validationModal.style.display = 'none';
         }
-    }    // Handle clicking outside modal to close it
+    }    // Setup modal close handlers for today visit edit modal
+    const editModal = document.getElementById('todayVisitEditModal');
+    const editCloseBtns = editModal?.querySelectorAll('.close-modal');
+    if (editCloseBtns) {
+        editCloseBtns.forEach(btn => {
+            btn.onclick = function () {
+                editModal.style.display = 'none';
+            }
+        });
+    }
+
+    // Handle clicking outside modal to close it
     window.onclick = function (event) {
         if (event.target === todayModal) {
             todayModal.style.display = 'none';
@@ -948,6 +1074,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (event.target === validationModal) {
             validationModal.style.display = 'none';
+        }
+        if (event.target === editModal) {
+            editModal.style.display = 'none';
         }
     }    // Add escape key handler for modals
     document.addEventListener('keydown', function (event) {
@@ -966,6 +1095,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (validationModal && validationModal.style.display === 'block') {
                 validationModal.style.display = 'none';
+            }
+            if (editModal && editModal.style.display === 'block') {
+                editModal.style.display = 'none';
             }
         }
     });
@@ -1393,3 +1525,107 @@ function showValidationModal(message) {
         modal.style.display = 'block';
     }
 }
+
+// Performs the fetch function to update an existing visit
+async function updateVisitFetch(requestBody) {
+    console.log('updateVisitFetch called');
+    const visitId = document.getElementById('editVisitId')?.value || '';
+    const url = "http://localhost:8080/visit/" + visitId;
+    const accessToken = localStorage.getItem("accessToken");
+ 
+    try {
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + accessToken
+            },
+            body: JSON.stringify(requestBody)
+        });
+ 
+        if (!response.ok) {
+            throw new Error(`Errore nell'aggiornamento della visita: ${response.status}`);
+        }
+
+        // Show success and close modal
+        showVisitSuccessModal();
+        document.getElementById('todayVisitEditModal').style.display = 'none';
+        
+        // Refresh the visits table
+        if (typeof fetchAndPopulateTodayVisits === 'function') {
+            await fetchAndPopulateTodayVisits();
+        }
+    }
+    catch (error) {
+        console.error("Errore nell'aggiornamento della visita:", error.message);
+        showVisitErrorModal("Errore durante l'aggiornamento della visita. Riprova più tardi.");
+    }
+}
+
+// Handle edit visit form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const editForm = document.getElementById('todayVisitEditForm');
+    if (editForm) {
+        editForm.onsubmit = async function (e) {
+            e.preventDefault();
+ 
+            // Validate required fields
+            const idMaterialeInformatico = document.getElementById('editVisitIdMaterialeInformatico')?.value || '';
+            if (!idMaterialeInformatico) {
+                showValidationModal("Seleziona un materiale informatico!");
+                return;
+            }
+
+            const visitId = document.getElementById('editVisitId')?.value || '';
+            const idVisitatore = document.getElementById('editVisitIdPersona')?.value || '';
+            const idResponsabile = document.getElementById('editVisitIdResponsabile')?.value || '';
+            const dataInizio = document.getElementById('editStartDate')?.value || '';
+            const oraInizio = document.getElementById('editStartTime')?.value || '';
+            const motivo = document.getElementById('editVisitReason')?.value || '';
+
+            // Additional validation
+            if (!idVisitatore) {
+                showValidationModal("Seleziona un visitatore!");
+                return;
+            }
+            if (!idResponsabile) {
+                showValidationModal("Seleziona un responsabile!");
+                return;
+            }
+            if (!dataInizio) {
+                showValidationModal("Inserisci la data di inizio!");
+                return;
+            }
+            if (!oraInizio) {
+                showValidationModal("Inserisci l'ora di inizio!");
+                return;
+            }
+            if (!motivo.trim()) {
+                showValidationModal("Inserisci il motivo della visita!");
+                return;
+            }
+
+            const flagDPI = document.getElementById('editVisitDPI')?.checked || false;
+            const flagAccessoConAutomezzo = document.getElementById('editVisitCar')?.checked || false;
+ 
+            console.log('Form values:', {
+                visitId, idVisitatore, idResponsabile, idMaterialeInformatico, dataInizio, oraInizio, motivo, flagDPI, flagAccessoConAutomezzo
+            });
+ 
+            const requestBody = {
+                id: visitId,
+                idVisitatore: idVisitatore,
+                idResponsabile: idResponsabile,
+                idMaterialeInformatico: idMaterialeInformatico,
+                dataInizio: dataInizio,
+                oraInizio: oraInizio,
+                motivo: motivo,
+                flagDPI: flagDPI,
+                flagAccessoConAutomezzo: flagAccessoConAutomezzo
+            };
+ 
+            console.log('Calling updateVisitFetch');
+            await updateVisitFetch(requestBody);
+        };
+    }
+});

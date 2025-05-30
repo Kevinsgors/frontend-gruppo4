@@ -357,6 +357,65 @@
                 </div>
             </div>
         </div>
+    </div>    <!-- Modal for modifying visit -->
+    <div id="todayVisitEditModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Modifica Visita</h3>
+            </div>
+            <form id="todayVisitEditForm">
+                <div class="modal-body">
+                    <div class="details-grid">
+                        <div class="detail-section">
+                            <h4>Informazioni Visitatore</h4>
+                            <label for="visitId">
+                                <input type="hidden" id="editVisitId" name="visitId">
+                            </label>
+                            <label>
+                                Visitatore:
+                                <select id="editVisitIdPersona" name="editVisitIdPersona"></select>
+                            </label>
+                            <label>
+                                Responsabile:
+                                <select id="editVisitIdResponsabile" name="editVisitIdResponsabile">
+                                    <option></option>
+                                </select>
+                            </label>
+                            <label>
+                                Data Inizio:
+                                <input type="date" id="editStartDate" name="startDate">
+                            </label>
+                            <label>
+                                Ora Inizio:
+                                <input type="time" id="editStartTime" name="startTime">
+                            </label>
+                            <label>
+                                Motivo:
+                                <input type="text" id="editVisitReason" name="visitReason">
+                            </label>
+                            <label>
+                                DPI Richiesti:
+                                <input type="checkbox" id="editVisitDPI" name="visitDPI">
+                            </label>
+                            <label>
+                                Accesso con Automezzo:
+                                <input type="checkbox" id="editVisitCar" name="visitCar">
+                            </label>
+                            <label>
+                                Materiale Informatico:
+                                <select id="editVisitIdMaterialeInformatico" name="editVisitIdMaterialeInformatico" required>
+                                    <option value="">Seleziona materiale</option>
+                                    <!-- options -->
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>                <div class="modal-footer">
+                    <button type="button" class="action-button close-modal">Annulla</button>
+                    <button type="submit" class="action-button">Salva Modifiche</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 </body>
