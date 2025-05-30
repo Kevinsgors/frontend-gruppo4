@@ -574,6 +574,26 @@ function initializeTodayVisitsTable() {
                 render: function (data) {
                     return `${data.responsabile?.nome || ''} ${data.responsabile?.cognome || ''}`;
                 }
+            },            {
+                title: 'Stato Visita',
+                data: 'status',
+                render: function (data) {
+                    return data || 'Da Iniziare';
+                }
+            },
+            {
+                title: 'Azioni Visita',
+                data: null,
+                render: function (data) {
+                    if (data.status === 'Iniziata') {
+                        // Se la visita è in corso o ha data inizio ma non fine
+                        return `<button onclick='endVisit(${data.id})' class="action-button">Termina Visita</button>`;
+                    } else if (!data.status) {
+                        // Se la visita non è iniziata (status null o PROGRAMMATA) o non ha data inizio
+                        return `<button onclick='startVisit(${data.id})' class="action-button">Inizia Visita</button>`;
+                    }
+                    return ''; // Non mostrare bottoni se la visita è terminata
+                }
             },
             {
                 title: 'Azioni',
@@ -1921,5 +1941,97 @@ function formatTimeToHourMinute(timeString) {
     } catch (error) {
         console.warn('Error formatting time:', timeString, error);
         return timeString;
+    }
+}
+
+async function startVisit(visitId) {
+    try {
+        const response = await fetch(`http://localhost:8080/visit/start_visit/${visitId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // La risposta contiene i dati aggiornati della visita
+        const updatedVisit = await response.json();
+        // Aggiorna i dati nella tabella
+        const table = $('#todayVisitsTable').DataTable();
+
+        // Trova la riga corrispondente e aggiornala
+        table.rows().every(function () {
+            const rowData = this.data();
+            if (rowData.id === visitId) {
+                // Aggiorna i dati della riga con la visita aggiornata
+                this.data(updatedVisit);
+
+                // Trova il pulsante nella riga corrente
+                const node = this.node();
+                const startButton = node.querySelector('button.action-button');
+                if (startButton && startButton.textContent === 'Inizia Visita') {
+                    startButton.textContent = 'Termina Visita';
+                    startButton.onclick = () => endVisit(visitId);
+                }
+            }
+        });
+
+        // Ridisegna la tabella per applicare le modifiche
+        table.draw(false);
+
+    } catch (error) {
+        console.error('Error starting visit:', error);
+        alert('Errore durante l\'avvio della visita. Riprova più tardi.');
+    }
+}
+
+async function endVisit(visitId) {
+    try {
+        const response = await fetch(`http://localhost:8080/visit/end_visit/${visitId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const updatedVisit = await response.json();
+
+        // Aggiorna i dati nella tabella
+        const table = $('#todayVisitsTable').DataTable();
+
+        // Trova la riga corrispondente e aggiornala
+        table.rows().every(function () {
+            const rowData = this.data();
+            if (rowData.id === visitId) {
+                // Aggiorna i dati della riga con la visita aggiornata
+                this.data(updatedVisit);
+
+                // Trova il pulsante nella riga corrente e rimuovilo
+                const node = this.node();
+                const actionButton = node.querySelector('button.action-button');
+                if (actionButton) {
+                    actionButton.remove();
+                }
+            }
+        });
+
+        // Ridisegna la tabella per applicare le modifiche
+        table.draw(false);
+
+        // Aggiorna il conteggio delle persone presenti
+        await updatePeopleCount();
+
+    } catch (error) {
+        console.error('Error ending visit:', error);
+        alert('Errore durante la chiusura della visita. Riprova più tardi.');
     }
 }
