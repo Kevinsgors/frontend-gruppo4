@@ -1,5 +1,4 @@
 // Dashboard Admin JavaScript Functions
-
 document.addEventListener('DOMContentLoaded', function () {
     initializeMenus();
     initializeSectionNavigation();
@@ -8,12 +7,15 @@ document.addEventListener('DOMContentLoaded', function () {
     setupFutureVisits();
     setupPersonalVisits();
     setupVisitsHistory();
+    setupPresentPeople();
     setupEmployeeBadgesHistory();
     setupVisitorBadgesHistory();
     setupLunchAreaBadgesHistory();
     setupPeopleList();
     setupEmployeePhoneDirectory();
     updatePeopleCount();
+    setupPresentPeopleTables(); // Initialize present people tables on load
+    setupPresentPeople(); // Initialize present people section
 });
 
 // Initialize dropdown menu functionality
@@ -158,10 +160,13 @@ async function setupHomeDashboard() {
     try {
         // Initialize home dashboard tables
         initializeHomeDashboardTables();
-        
+
+        // Initialize present people tables
+        setupPresentPeopleTables();
+
         // Setup navigation buttons
         setupHomeDashboardNavigation();
-        
+
         // Load initial data if home section is visible
         const homeSection = document.getElementById('admin-home-section');
         if (homeSection && homeSection.classList.contains('active')) {
@@ -295,7 +300,7 @@ function setupHomeDashboardNavigation() {
     const createUserBtn = document.getElementById('createUserBtn');
 
     if (viewAllTodayBtn) {
-        viewAllTodayBtn.addEventListener('click', function() {
+        viewAllTodayBtn.addEventListener('click', function () {
             // Navigate to today visits section
             showSection('admin-visualizza-elenco-visite-odierne-section');
             // Trigger the menu item click to load data
@@ -307,7 +312,7 @@ function setupHomeDashboardNavigation() {
     }
 
     if (viewAllFutureBtn) {
-        viewAllFutureBtn.addEventListener('click', function() {
+        viewAllFutureBtn.addEventListener('click', function () {
             // Navigate to future visits section
             showSection('admin-visualizza-elenco-visite-future-section');
             // Trigger the menu item click to load data
@@ -319,7 +324,7 @@ function setupHomeDashboardNavigation() {
     }
 
     if (createUserBtn) {
-        createUserBtn.addEventListener('click', function() {
+        createUserBtn.addEventListener('click', function () {
             // Navigate to create people section
             showSection('admin-visitatori-crea-persone-section');
         });
@@ -385,6 +390,10 @@ let peopleTable = null;
 let homeTodayVisitsTable = null;
 let homeFutureVisitsTable = null;
 
+// Variables for present people tables
+let presentEmployeesTable = null;
+let presentVisitorsTable = null;
+
 async function setupTodayVisits() {
     // Initialize DataTable when the visualizza-elenco-visite-odierne menu item is clicked
     document.getElementById('visualizza-elenco-visite-odierne').addEventListener('click', async function () {
@@ -431,7 +440,8 @@ async function setupFutureVisits() {
         } else {
             // Refresh data if table already exists
             await fetchAndPopulateFutureVisits();
-        }    });
+        }
+    });
 }
 
 async function setupPersonalVisits() {
@@ -610,7 +620,8 @@ function initializeFutureVisitsTable() {
                     return `<button onclick='showFutureVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
                 }
             }
-        ]    });
+        ]
+    });
 }
 
 function initializePersonalVisitsTable() {
@@ -813,7 +824,8 @@ async function fetchAndPopulateFutureVisits() {
         // Show message if no future visits
         if (futureVisits.length === 0) {
             console.log('Nessuna visita futura programmata');
-        }    } catch (error) {
+        }
+    } catch (error) {
         console.error('Error fetching future visits:', error);
         alert('Errore durante il recupero delle visite future.');
     }
@@ -887,6 +899,149 @@ async function fetchAndPopulatePeople() {
     } catch (error) {
         console.error('Error fetching people:', error);
         alert('Errore durante il recupero dell\'elenco persone.');
+    }
+}
+
+// Setup present people tables
+function setupPresentPeople() {
+    // Initialize section when the menu item is clicked
+    document.getElementById('visitatori-elenco-presenti').addEventListener('click', async function () {
+        try {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                throw new Error('No access token found');
+            }
+
+            await refreshJwt();
+
+            if (!presentEmployeesTable || !presentVisitorsTable) {
+                setupPresentPeopleTables();
+            } else {
+                // If tables are already initialized, just refresh the data
+                await fetchAndPopulatePresentPeople();
+            }
+        } catch (error) {
+            console.error('Error setting up present people section:', error);
+        }
+    });
+}
+
+function setupPresentPeopleTables() {
+    // Check if tables are already initialized
+    if ($.fn.DataTable.isDataTable('#table-presenti-dipendeti')) {
+        presentEmployeesTable = $('#table-presenti-dipendeti').DataTable();
+    } else {
+        // Initialize employees table
+        presentEmployeesTable = $('#table-presenti-dipendeti').DataTable({
+            responsive: true,
+            dom: 'Bfrtip',
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            },
+            columns: [
+                {
+                    title: 'Nome',
+                    data: 'nome',
+                    render: function (data) {
+                        return data || 'N/A';
+                    }
+                },
+                {
+                    title: 'Cognome',
+                    data: 'cognome',
+                    render: function (data) {
+                        return data || 'N/A';
+                    }
+                },
+                {
+                    title: 'Email',
+                    data: 'mail',
+                    render: function (data) {
+                        return data || 'N/A';
+                    }
+                }
+            ]
+        });    // Check if visitors table is already initialized
+        if ($.fn.DataTable.isDataTable('#table-presenti-visitatori')) {
+            presentVisitorsTable = $('#table-presenti-visitatori').DataTable();
+        } else {
+            // Initialize visitors table (including maintenance)
+            presentVisitorsTable = $('#table-presenti-visitatori').DataTable({
+                responsive: true,
+                dom: 'Bfrtip',
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+                },
+                columns: [
+                    {
+                        title: 'Nome',
+                        data: 'nome',
+                        render: function (data) {
+                            return data || 'N/A';
+                        }
+                    },
+                    {
+                        title: 'Cognome',
+                        data: 'cognome',
+                        render: function (data) {
+                            return data || 'N/A';
+                        }
+                    },
+                    {
+                        title: 'Email',
+                        data: 'mail',
+                        render: function (data) {
+                            return data || 'N/A';
+                        }
+                    }
+                ]
+            });
+
+            // Load initial data
+            fetchAndPopulatePresentPeople();
+
+            // Set up auto-refresh every 30 seconds
+            setInterval(fetchAndPopulatePresentPeople, 30000);
+        }
+    }
+}
+async function fetchAndPopulatePresentPeople() {
+    try {
+        const response = await fetch('http://localhost:8080/list/people', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Update employees table
+        if (data.Employees && Array.isArray(data.Employees)) {
+            presentEmployeesTable.clear().rows.add(data.Employees).draw();
+        }
+
+        // Combine visitors and maintenance personnel for visitors table
+        const allVisitors = [
+            ...(data.Visitors || []),
+            ...(data.Maintenance || [])
+        ];
+        presentVisitorsTable.clear().rows.add(allVisitors).draw();
+
+    } catch (error) {
+        console.error('Error loading present people:', error);
+        presentEmployeesTable.clear().draw();
+        presentVisitorsTable.clear().draw();
+
+        // Show error in counts
+        document.querySelectorAll('.employeesCount, .visitorsCount, .totalPresent').forEach(el => {
+            el.textContent = '-';
+        });
     }
 }
 
@@ -1584,20 +1739,28 @@ async function updatePeopleCount() {
         }
 
         const data = await response.json();
-        
+
         // Calculate total present (sum of all values)
         const totalPresent = Object.values(data).reduce((sum, count) => sum + count, 0);
-        
+
         // Get employees count directly
         const employeesCount = data.Employees;
-        
+
         // Calculate visitors count (Visitors + Maintenance)
         const visitorsCount = (data.Visitors || 0) + (data.Maintenance || 0);
 
         // Update the display
-        document.getElementById('totalPresent').textContent = totalPresent;
-        document.getElementById('employeesCount').textContent = employeesCount;
-        document.getElementById('visitorsCount').textContent = visitorsCount;
+        document.querySelectorAll('.totalPresent').forEach(element => {
+            element.textContent = totalPresent;
+        });
+
+        document.querySelectorAll('.employeesCount').forEach(element => {
+            element.textContent = employeesCount;
+        });
+
+        document.querySelectorAll('.visitorsCount').forEach(element => {
+            element.textContent = visitorsCount;
+        });
 
     } catch (error) {
         console.error('Error fetching people count:', error);

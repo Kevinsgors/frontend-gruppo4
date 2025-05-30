@@ -90,17 +90,18 @@
                         </div>
                         <div class="top-right">
                             <div class="big-box">
-                                <div style="font-size:2.5rem;font-weight:bold;line-height:1;" id="totalPresent">0</div>
+                                <div style="font-size:2.5rem;font-weight:bold;line-height:1;" class="totalPresent">0
+                                </div>
                                 <div style="font-size:1rem;">Presenti totali</div>
                             </div>
 
                             <div class="small-box">
-                                <div style="font-size:1.5rem;font-weight:bold;" id="employeesCount">0
+                                <div style="font-size:1.5rem;font-weight:bold;" class="employeesCount">0
                                 </div>
                                 <div style="font-size:0.9rem;">Dipendenti</div>
                             </div>
                             <div class="small-box">
-                                <div style="font-size:1.5rem;font-weight:bold;" id="visitorsCount">0
+                                <div style="font-size:1.5rem;font-weight:bold;" class="visitorsCount">0
                                 </div>
                                 <div style="font-size:0.9rem;">Visitatori</div>
                             </div>
@@ -386,8 +387,57 @@
                 <p>Qui puoi creare nuove persone.</p>
             </section>
             <section id="admin-visitatori-elenco-presenti-section" class="section">
-                <h2>Elenco Presenti</h2>
-                <p>Qui puoi visualizzare l'elenco delle persone presenti.</p>
+                <div class="top-section">
+                    <div class="top-left">
+                        <h1>Elenco Presenti</h1>
+                    </div>
+                    <div class="top-right">
+                        <div class="big-box">
+                            <div style="font-size:2.5rem;font-weight:bold;line-height:1;" class="totalPresent">0</div>
+                            <div style="font-size:1rem;">Presenti totali</div>
+                        </div>
+
+                        <div class="small-box">
+                            <div style="font-size:1.5rem;font-weight:bold;" class="employeesCount">0
+                            </div>
+                            <div style="font-size:0.9rem;">Dipendenti</div>
+                        </div>
+                        <div class="small-box">
+                            <div style="font-size:1.5rem;font-weight:bold;" class="visitorsCount">0
+                            </div>
+                            <div style="font-size:0.9rem;">Visitatori</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-section">
+                    <div class="box">
+                        <h3>Dipendenti</h3>
+                        <table id="table-presenti-dipendeti" class="display mini-datatable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Cognome</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box">
+                        <h3>Visitatori</h3>
+                        <table id="table-presenti-visitatori" class="display mini-datatable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Cognome</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
             <section id="admin-visualizza-elenco-persone-section" class="section">
                 <h2>Elenco Persone</h2>

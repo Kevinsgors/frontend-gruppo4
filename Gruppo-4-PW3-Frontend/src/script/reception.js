@@ -1587,10 +1587,18 @@ async function updatePeopleCount() {
         // Calculate visitors count (Visitors + Maintenance)
         const visitorsCount = (data.Visitors || 0) + (data.Maintenance || 0);
 
-        // Update the display
-        document.getElementById('totalPresent').textContent = totalPresent;
-        document.getElementById('employeesCount').textContent = employeesCount;
-        document.getElementById('visitorsCount').textContent = visitorsCount;
+        // Update all elements with these classes
+        document.querySelectorAll('.totalPresent').forEach(element => {
+            element.textContent = totalPresent;
+        });
+        
+        document.querySelectorAll('.employeesCount').forEach(element => {
+            element.textContent = employeesCount;
+        });
+        
+        document.querySelectorAll('.visitorsCount').forEach(element => {
+            element.textContent = visitorsCount;
+        });
 
     } catch (error) {
         console.error('Error fetching people count:', error);
