@@ -951,6 +951,7 @@ div.dt-container.dt-empty-footer tbody > tr:last-child > * {
     margin-bottom: 0;
     cursor: pointer;
     accent-color: #405577;
+    border: 2px solid #d9d9d9;
     border-radius: 4px;
 }
 

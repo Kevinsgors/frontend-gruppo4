@@ -74,17 +74,18 @@
                         </div>
                         <div class="top-right">
                             <div class="big-box">
-                                <div style="font-size:2.5rem;font-weight:bold;line-height:1;" id="totalPresent">0</div>
+                                <div style="font-size:2.5rem;font-weight:bold;line-height:1;" class="totalPresent">0
+                                </div>
                                 <div style="font-size:1rem;">Presenti totali</div>
                             </div>
 
                             <div class="small-box">
-                                <div style="font-size:1.5rem;font-weight:bold;" id="employeesCount">0
+                                <div style="font-size:1.5rem;font-weight:bold;" class="employeesCount">0
                                 </div>
                                 <div style="font-size:0.9rem;">Dipendenti</div>
                             </div>
                             <div class="small-box">
-                                <div style="font-size:1.5rem;font-weight:bold;" id="visitorsCount">0
+                                <div style="font-size:1.5rem;font-weight:bold;" class="visitorsCount">0
                                 </div>
                                 <div style="font-size:0.9rem;">Visitatori</div>
                             </div>
@@ -130,7 +131,8 @@
                                 </thead>
                                 <tbody></tbody>
                             </table> <button class="action-button mini-link" type="button" id="viewAllFutureBtn">Vai a
-                                Visitatori                                Futuri</button>
+                                Visitatori
+                                Futuri</button>
                         </div>
                     </div>
                 </div>
@@ -138,7 +140,7 @@
             <section id="admin-visualizza-elenco-visite-odierne-section" class="section">
                 <h2>Elenco Visite Odierne</h2>
                 <div class="table-container">
-                    <table id="todayVisitsTable" class="display" style="width:100%">
+                    <table id="todayVisitsTable" class="display custom-table" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Visitatore</th>
@@ -186,7 +188,7 @@
             <section id="admin-visualizza-elenco-visite-future-section" class="section">
                 <h2>Elenco Visite Future</h2>
                 <div class="table-container">
-                    <table id="futureVisitsTable" class="display" style="width:100%">
+                    <table id="futureVisitsTable" class="display custom-table" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Visitatore</th>
@@ -234,7 +236,7 @@
             <section id="admin-visualizza-elenco-tel-sm-section" class="section">
                 <h2>Elenco Telefonico Dipendenti</h2>
                 <div class="table-container">
-                    <table id="employeePhoneDirectoryTable" class="display" style="width:100%">
+                    <table id="employeePhoneDirectoryTable" class="display custom-table" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Nome</th>
@@ -246,10 +248,79 @@
                         </thead>
                     </table>
                 </div>
-            </section>
-            <section id="admin-visitatori-crea-visite-section" class="section">
-                <h2>Crea Visite</h2>
-                <p>Qui puoi creare nuove visite.</p>
+            </section>            <section id="admin-visitatori-crea-visite-section" class="section">
+                <h2>Prenota visita</h2>
+                <div class="create-person-form">
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3>Informazioni Visita</h3>
+                            
+                            <div class="form-group">
+                                <input type="checkbox" id="prima-visita">
+                                <span>Prima visita</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="idVisitatore-crea-visita">Visitatore</label>
+                                <select name="idVisitatore-crea-visita" id="idVisitatore-crea-visita" required>
+                                    <option value="">Seleziona visitatore</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="idResponsabile-crea-visita">Responsabile visita</label>
+                                <select name="idResponsabile-crea-visita" id="idResponsabile-crea-visita" required>
+                                    <option value="">Seleziona responsabile</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="materiale-informatico-crea-visita">Materiale informatico</label>
+                                <select name="materiale-informatico-crea-visita" id="materiale-informatico-crea-visita">
+                                    <option value="">Seleziona materiale informatico</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Data e Ora</h3>
+                            
+                            <div class="form-group">
+                                <label for="data-inizio">Data inizio</label>
+                                <input type="date" id="data-inizio" name="data-inizio" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="ora-inizio">Ora inizio</label>
+                                <input type="time" id="ora-inizio" name="ora-inizio" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="motivo">Motivo visita</label>
+                                <input type="text" id="motivo" name="motivo" placeholder="Descrivi il motivo della visita" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Opzioni Aggiuntive</h3>
+                            
+                            <div class="form-group">
+                                <input type="checkbox" id="automezzo">
+                                <span>Accesso automezzo</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <input type="checkbox" id="dpi">
+                                <span>Richiesta DPI</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-primary" id="crea-visita-button">Prenota Visita</button>
+                        <button type="button" class="btn-secondary" onclick="resetCreateVisitForm()">Annulla</button>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
