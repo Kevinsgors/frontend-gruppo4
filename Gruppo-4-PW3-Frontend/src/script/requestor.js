@@ -501,7 +501,7 @@ function initializeHomeTodayVisitsTable() {
                 title: 'Visitatore',
                 data: null,
                 render: function (data) {
-                    return `${data.personaVisitatore?.nome || ''} ${data.personaVisitatore?.cognome || ''}`;
+                    return `${data.visitatore?.nome || ''} ${data.visitatore?.cognome || ''}`;
                 }
             },
             {

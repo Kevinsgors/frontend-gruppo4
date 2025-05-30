@@ -941,6 +941,7 @@ div.dt-container.dt-empty-footer tbody > tr:last-child > * {
 .form-group input[type="email"],
 .form-group input[type="tel"],
 .form-group input[type="date"],
+.form-group input[type="time"],
 .form-group input[type="number"],
 .form-group select {
     width: 100%;
@@ -960,6 +961,7 @@ div.dt-container.dt-empty-footer tbody > tr:last-child > * {
 .form-group input[type="email"]:focus,
 .form-group input[type="tel"]:focus,
 .form-group input[type="date"]:focus,
+.form-group input[type="time"]:focus,
 .form-group input[type="number"]:focus,
 .form-group select:focus {
     outline: none;
@@ -971,6 +973,7 @@ div.dt-container.dt-empty-footer tbody > tr:last-child > * {
 .form-group input[type="email"]:invalid,
 .form-group input[type="tel"]:invalid,
 .form-group input[type="date"]:invalid,
+.form-group input[type="time"]:invalid,
 .form-group input[type="number"]:invalid,
 .form-group select:invalid {
     border-color: #0A1429;

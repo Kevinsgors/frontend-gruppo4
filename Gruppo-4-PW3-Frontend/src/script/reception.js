@@ -160,14 +160,25 @@ async function setupHomeDashboard() {
 function initializeHomeDashboardTables() {
     // Initialize home today visits table (summary version)
     homeTodayVisitsTable = $('#homeTodayVisitsTable').DataTable({
+       lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
         searching: false,
         paging: false,
         info: false,
         ordering: false,
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
-            emptyTable: 'Nessuna visita per oggi'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         columns: [
             {
@@ -217,14 +228,25 @@ function initializeHomeDashboardTables() {
 
     // Initialize home future visits table (summary version)
     homeFutureVisitsTable = $('#homeFutureVisitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
         searching: false,
         paging: false,
         info: false,
         ordering: false,
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
-            emptyTable: 'Nessuna visita futura'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         columns: [
             {
@@ -1180,14 +1202,25 @@ async function setupPeopleList() {
 
 function initializeTodayVisitsTable() {
     todayVisitsTable = $('#todayVisitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
-        searching: true,
-        paging: true,
-        info: true,
-        ordering: true,
+        searching: false,
+        paging: false,
+        info: false,
+        ordering: false,
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
-            emptyTable: 'Nessuna visita per oggi'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         columns: [
             {
@@ -1276,14 +1309,25 @@ function initializeTodayVisitsTable() {
 
 function initializeFutureVisitsTable() {
     futureVisitsTable = $('#futureVisitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
-        searching: true,
-        paging: true,
-        info: true,
-        ordering: true,
+        searching: false,
+        paging: false,
+        info: false,
+        ordering: false,
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
-            emptyTable: 'Nessuna visita futura'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         columns: [
             {
@@ -2147,10 +2191,13 @@ function hidePersonModals() {
 
 // Delete a visit with confirmation
 async function deleteVisit(visitId) {
-    if (!confirm('Sei sicuro di voler eliminare questa visita?')) {
-        return;
-    }
+    showConfirmationModal('Sei sicuro di voler eliminare questa visita?', async function() {
+        await performDeleteVisit(visitId);
+    });
+}
 
+// Perform the actual visit deletion
+async function performDeleteVisit(visitId) {
     try {
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -2170,10 +2217,8 @@ async function deleteVisit(visitId) {
         }
 
         // Refresh both tables to show the updated data
-
         await fetchAndPopulateTodayVisits();
-        await fetchAndPopulateFutureVisits();
-        alert('Visita eliminata con successo');
+        await fetchAndPopulateFutureVisits();        alert('Visita eliminata con successo');
     } catch (error) {
         console.error('Errore durante l\'eliminazione della visita:', error);
         alert('Errore durante l\'eliminazione della visita');
@@ -2213,5 +2258,51 @@ async function assignBadge(visitId) {
     } catch (error) {
         console.error('Errore durante l\'assegnazione del badge:', error);
         alert('Errore durante l\'assegnazione del badge');
+    }
+}
+
+// Show confirmation modal for dangerous operations
+function showConfirmationModal(message, onConfirm) {
+    const modal = document.getElementById('confirmationModal');
+    const messageElement = document.getElementById('confirmationMessage');
+    const confirmButton = document.getElementById('confirmButton');
+    const cancelButton = document.getElementById('cancelButton');
+    
+    if (modal && messageElement && confirmButton && cancelButton) {
+        messageElement.textContent = message || 'Sei sicuro di voler procedere?';
+        modal.style.display = 'block';
+        
+        // Remove any existing event listeners
+        confirmButton.replaceWith(confirmButton.cloneNode(true));
+        cancelButton.replaceWith(cancelButton.cloneNode(true));
+        
+        // Get the new button references after cloning
+        const newConfirmButton = document.getElementById('confirmButton');
+        const newCancelButton = document.getElementById('cancelButton');
+        
+        // Add event listeners
+        newConfirmButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+            if (onConfirm) onConfirm();
+        });
+        
+        newCancelButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        // Close modal when clicking the X button
+        const closeButton = modal.querySelector('.close-modal');
+        if (closeButton) {
+            closeButton.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
     }
 }
