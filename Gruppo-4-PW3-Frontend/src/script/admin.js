@@ -646,7 +646,7 @@ function initializePersonalVisitsTable() {
                 render: function (data) {
                     return data ? new Date(data).toLocaleDateString('it-IT') : '';
                 }
-            },            {
+            }, {
                 title: 'Ora Inizio',
                 data: 'oraInizio',
                 render: function (data) {
@@ -731,12 +731,12 @@ function initializePeopleTable() {
                 render: function (data) {
                     return data || '';
                 }
-            },
+            }, 
             {
                 title: 'Ruolo',
                 data: 'ruolo',
                 render: function (data) {
-                    return data || '';
+                    return data?.descrizione || '';
                 }
             },
             {
@@ -1766,25 +1766,25 @@ function formatTimeToHourMinute(timeString) {
     try {
         // Handle different time formats
         let cleanTime = timeString.trim();
-        
+
         // If it's in HH:MM format already, return as is
         if (/^\d{1,2}:\d{2}$/.test(cleanTime)) {
             const [hours, minutes] = cleanTime.split(':');
             return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
         }
-        
+
         // If it's in HH:MM:SS format, extract hours and minutes
         if (/^\d{1,2}:\d{2}:\d{2}$/.test(cleanTime)) {
             const [hours, minutes] = cleanTime.split(':');
             return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
         }
-        
+
         // If it's in HH:MM:SS.mmm format (with milliseconds), extract hours and minutes
         if (/^\d{1,2}:\d{2}:\d{2}\.\d+$/.test(cleanTime)) {
             const [hours, minutes] = cleanTime.split(':');
             return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
         }
-        
+
         // Try to parse as Date object if it's a full datetime string
         const date = new Date(timeString);
         if (!isNaN(date.getTime())) {
@@ -1792,10 +1792,10 @@ function formatTimeToHourMinute(timeString) {
             const minutes = date.getMinutes().toString().padStart(2, '0');
             return `${hours}:${minutes}`;
         }
-        
+
         // If nothing matches, return the original string
         return timeString;
-        
+
     } catch (error) {
         console.warn('Error formatting time:', timeString, error);
         return timeString;
