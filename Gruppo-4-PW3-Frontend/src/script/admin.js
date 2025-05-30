@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setupVisitorBadgesHistory();
     setupLunchAreaBadgesHistory();
     setupPeopleList();
+    setupCreateVisitForm();
     setupEmployeePhoneDirectory();
     updatePeopleCount();
     setupPresentPeopleTables(); // Initialize present people tables on load
@@ -2272,4 +2273,249 @@ async function deletePerson(idPersona) {
         console.error('Error deleting person:', error);
         alert('Errore durante l\'eliminazione della persona. Riprova più tardi.');
     }
+}
+
+// Setup create visit form functionality
+function setupCreateVisitForm() {
+    // Add event listener to the create visit button
+    const createVisitButton = document.getElementById('crea-visita-button');
+    if (createVisitButton) {
+        createVisitButton.addEventListener('click', createVisit);
+    }
+}
+
+// Function to create the visit form for Requester
+async function createVisitForm() {
+    console.log("Inizializzazione form visita");
+    const peopleUrl = "http://localhost:8080/people";
+    const itProvisionUrl = "http://localhost:8080/it-provision";
+    const accessToken = localStorage.getItem("accessToken");
+    const visitors = new Array();
+    const employees = new Array();
+
+    try {
+        // Fetch people data
+        const peopleResponse = await fetch(peopleUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + accessToken
+            }
+        });
+
+        if (!peopleResponse.ok) {
+            throw new Error(`Errore nel recupero dei dati people: ${peopleResponse.status}`);
+        }
+
+        const peopleData = await peopleResponse.json();
+        console.log('peopleData:', peopleData);
+
+        // Separate visitors and employees
+        peopleData.forEach(person => {
+            if (person.azienda === "Secondo Mona") {
+                employees.push(person);
+            } else {
+                visitors.push(person);
+            }
+        });
+
+        // Populate visitor select
+        const visitorSelect = document.getElementById("idVisitatore-crea-visita");
+        if (visitorSelect) {
+            visitorSelect.innerHTML = "<option value=''>Seleziona visitatore</option>";
+            visitors.forEach(visitor => {
+                const option = document.createElement("option");
+                option.innerHTML = `${visitor.nome} ${visitor.cognome} - ${visitor.azienda} - ${visitor.email || visitor.mail || ''}`;
+                option.value = visitor.idPersona;
+                visitorSelect.appendChild(option);
+            });
+        }
+
+        // Populate employee select
+        const employeeSelect = document.getElementById("idResponsabile-crea-visita");
+        if (employeeSelect) {
+            employeeSelect.innerHTML = "<option value=''>Seleziona responsabile</option>";
+            employees.forEach(employee => {
+                const option = document.createElement("option");
+                option.innerHTML = `${employee.nome} ${employee.cognome} - ${employee.azienda} - ${employee.email || employee.mail || ''}`;
+                option.value = employee.idPersona;
+                employeeSelect.appendChild(option);
+            });
+        }
+
+        // Fetch IT provision data
+        const itProvisionResponse = await fetch(itProvisionUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + accessToken
+            }
+        });
+
+        if (!itProvisionResponse.ok) {
+            throw new Error(`Errore nel recupero dei dati IT provision: ${itProvisionResponse.status}`);
+        }
+
+        const itProvisionData = await itProvisionResponse.json();
+        console.log('itProvisionData:', itProvisionData);
+
+        // Populate IT provision select
+        const itProvisionSelect = document.getElementById("materiale-informatico-crea-visita");
+        if (itProvisionSelect) {
+            itProvisionSelect.innerHTML = "<option value=''>Seleziona materiale informatico</option>";
+            itProvisionData.forEach(itProvision => {
+                const option = document.createElement("option");
+                option.innerHTML = `${itProvision.tipologia} - ${itProvision.marca} - ${itProvision.seriale}`;
+                option.value = itProvision.id;
+                itProvisionSelect.appendChild(option);
+            });
+        }
+
+        console.log("Form visita inizializzato con successo");
+    } catch (error) {
+        console.error("Errore nella creazione del form visita:", error.message);
+        alert('Errore nel caricamento dei dati del form. Riprova più tardi.');
+    }
+}
+
+// Function to create a new visit
+function createVisit(event) {
+    event.preventDefault();
+    console.log("Inizio creazione visita");
+
+    // Get form values
+    const idVisitatore = document.getElementById("idVisitatore-crea-visita").value;
+    const idResponsabile = document.getElementById("idResponsabile-crea-visita").value;
+    const idMaterialeInformatico = document.getElementById("materiale-informatico-crea-visita").value;
+    const dataInizio = document.getElementById("data-inizio").value;
+    const oraInizio = document.getElementById("ora-inizio").value;
+    const motivo = document.getElementById("motivo").value;
+    const flagAccessoConAutomezzo = document.getElementById("automezzo").checked;
+    const flagDPI = document.getElementById("dpi").checked;    // Validate required fields
+    if (!idVisitatore) {
+        showValidationModal("Seleziona un visitatore");
+        return;
+    }
+    if (!idResponsabile) {
+        showValidationModal("Seleziona un responsabile");
+        return;
+    }
+    if (!dataInizio) {
+        showValidationModal("Inserisci la data di inizio");
+        return;
+    }
+    if (!oraInizio) {
+        showValidationModal("Inserisci l'ora di inizio");
+        return;
+    }
+    if (!motivo.trim()) {
+        showValidationModal("Inserisci il motivo della visita");
+        return;
+    }
+
+    // Prepare request body
+    const requestBody = {
+        "dataInizio": dataInizio,
+        "oraInizio": oraInizio,
+        "dataFine": null,
+        "oraFine": null,
+        "motivo": motivo,
+        "idVisitatore": parseInt(idVisitatore),
+        "idResponsabile": parseInt(idResponsabile),
+        "flagDPI": flagDPI,
+        "idMaterialeInformatico": idMaterialeInformatico ? parseInt(idMaterialeInformatico) : null,
+        "vincolo": null,
+        "flagAccessoConAutomezzo": flagAccessoConAutomezzo
+    };
+
+    console.log("Request body:", requestBody);
+    createVisitFetch(requestBody);
+}
+
+// Performs the fetch function to create a new visit
+async function createVisitFetch(requestBody) {
+    try {
+        await refreshJwt(); // Refresh JWT if needed
+        const url = "http://localhost:8080/visit";
+        const accessToken = localStorage.getItem("accessToken");
+
+        console.log("Invio richiesta creazione visita...");        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + accessToken
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`Errore nella creazione della visita: ${response.status} - ${errorData}`);
+        }
+
+        // Check if response has content before trying to parse JSON
+        let responseData = null;
+        const contentType = response.headers.get("content-type");
+        const contentLength = response.headers.get("content-length");
+        
+        if (contentType && contentType.includes("application/json") && contentLength !== "0") {
+            try {
+                responseData = await response.json();
+                console.log("Visita creata con successo:", responseData);
+            } catch (jsonError) {
+                console.warn("Response is not valid JSON, but request was successful");
+                responseData = { success: true, message: "Visita creata con successo" };
+            }
+        } else {
+            // Response is empty or not JSON, but status is OK
+            console.log("Visita creata con successo (risposta vuota dal server)");
+            responseData = { success: true, message: "Visita creata con successo" };
+        }          // Show success modal
+        showVisitSuccessModal();
+        
+        // Reset form
+        resetCreateVisitForm();
+        
+        // Refresh home tables if they exist (without reinitializing)
+        if (homeTodayVisitsTable && homeFutureVisitsTable) {
+            try {
+                await fetchAndPopulateHomeTodayVisits();
+                await fetchAndPopulateHomeFutureVisits();
+            } catch (refreshError) {
+                console.error('Error refreshing home tables:', refreshError);
+            }
+        }    } catch (error) {
+        console.error("Errore nella creazione della visita:", error.message);
+        showVisitErrorModal(`Errore nella creazione della visita: ${error.message}`);
+    }
+}
+
+// Reset the create visit form
+function resetCreateVisitForm() {
+    // Reset all select elements
+    const selects = ['idVisitatore-crea-visita', 'idResponsabile-crea-visita', 'materiale-informatico-crea-visita'];
+    selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (select) {
+            select.selectedIndex = 0;
+        }
+    });
+
+    // Reset input fields
+    const inputs = ['data-inizio', 'ora-inizio', 'motivo'];
+    inputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.value = '';
+        }
+    });
+
+    // Reset checkboxes
+    const checkboxes = ['automezzo', 'dpi', 'prima-visita'];
+    checkboxes.forEach(checkboxId => {
+        const checkbox = document.getElementById(checkboxId);
+        if (checkbox) {
+            checkbox.checked = false;
+        }
+    });
 }
