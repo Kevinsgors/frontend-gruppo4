@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/src/css/dashboard.css">
     <script src="/src/script/jwtManager.js"></script>
     <script src="/src/script/reception.js"></script>
+    <script src="/src/script/logout.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
@@ -67,7 +68,7 @@
                 <div class="avatar-bg"></div>
                 <img class="avatar" src="/src/assets/utente.png" alt="User Avatar">
                 <div class="user-name">Nome e Cognome</div>
-                <button class="action-button">Logout</button>
+                <button class="action-button" onclick="logout()">Logout</button>
             </div>
         </aside>
         <main class="main-content">
