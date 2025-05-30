@@ -532,7 +532,7 @@ function initializeTodayVisitsTable() {
             zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
-        columns: [
+        columns: [ 
             {
                 title: 'Visitatore',
                 data: null,
