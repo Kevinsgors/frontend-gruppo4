@@ -1180,23 +1180,15 @@ async function setupPeopleList() {
 
 function initializeTodayVisitsTable() {
     todayVisitsTable = $('#todayVisitsTable').DataTable({
-        lengthChange: false,
-        pageLength: 6,
-        autoWidth: false,
         responsive: true,
+        searching: true,
+        paging: true,
+        info: true,
+        ordering: true,
         language: {
-            info: "Pagina _PAGE_ di _PAGES_",
-            infoEmpty: "Nessun elemento disponibile",
-            infoFiltered: "(filtrati da _MAX_ elementi totali)",
-            search: "Cerca:",
-            paginate: {
-                next: ">",
-                previous: "<"
-            },
-            emptyTable: "Nessun dato presente nella tabella",
-            zeroRecords: "Nessun risultato trovato"
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
+            emptyTable: 'Nessuna visita per oggi'
         },
-        order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
             {
                 title: 'Visitatore',
@@ -1241,35 +1233,58 @@ function initializeTodayVisitsTable() {
                 }
             },
             {
-                title: 'Azioni',
+                title: 'Stato Visita',
+                data: 'stato',
+                render: function (data) {
+                    return data || 'Da Iniziare';
+                }
+            },
+            {
+                title: 'Dettagli',
                 data: null,
-                render: function (data, type, row) {
-                    return `<button onclick='showTodayVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                render: function (data) {
+                    return `<button onclick='showTodayVisitDetails(${JSON.stringify(data)})' class="action-button">Dettagli</button>`;
+                }
+            },
+            {
+                title: 'Azioni Visita',
+                data: null,
+                render: function (data) {
+                    if (data.status === 'Iniziata') {
+                        // Se la visita è in corso o ha data inizio ma non fine
+                        return `<button onclick='endVisit(${data.id})' class="action-button">Termina Visita</button>`;
+                    } else if (data.status === "Da Iniziare" || !data.dataInizio) {
+                        // Se la visita non è iniziata (status null o PROGRAMMATA) o non ha data inizio
+                        return `<button onclick='startVisit(${data.id})' class="action-button">Inizia Visita</button>`;
+                    }
+                    return ''; // Non mostrare bottoni se la visita è terminata
+                }
+            },
+            {
+                title: 'Elimina',
+                data: null,
+                render: function (data) {
+                    return `<button onclick="deleteVisit(${data.id})" class="action-button delete-button">Elimina</button>`;
                 }
             }
         ]
     });
+    
+    // Fetch initial data
+    fetchAndPopulateTodayVisits();
 }
 
 function initializeFutureVisitsTable() {
     futureVisitsTable = $('#futureVisitsTable').DataTable({
-        lengthChange: false,
-        pageLength: 6,
-        autoWidth: false,
         responsive: true,
+        searching: true,
+        paging: true,
+        info: true,
+        ordering: true,
         language: {
-            info: "Pagina _PAGE_ di _PAGES_",
-            infoEmpty: "Nessun elemento disponibile",
-            infoFiltered: "(filtrati da _MAX_ elementi totali)",
-            search: "Cerca:",
-            paginate: {
-                next: ">",
-                previous: "<"
-            },
-            emptyTable: "Nessun dato presente nella tabella",
-            zeroRecords: "Nessun risultato trovato"
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
+            emptyTable: 'Nessuna visita futura'
         },
-        order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
             {
                 title: 'Visitatore',
@@ -1314,14 +1329,31 @@ function initializeFutureVisitsTable() {
                 }
             },
             {
-                title: 'Azioni',
+                title: 'Stato Visita',
+                data: 'stato',
+                render: function (data) {
+                    return data || 'Da Iniziare';
+                }
+            },
+            {
+                title: 'Dettagli',
                 data: null,
-                render: function (data, type, row) {
-                    return `<button onclick='showFutureVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
+                render: function (data) {
+                    return `<button onclick='showFutureVisitDetails(${JSON.stringify(data)})' class="action-button">Dettagli</button>`;
+                }
+            },
+            {
+                title: 'Elimina',
+                data: null,
+                render: function (data) {
+                    return `<button onclick="deleteVisit(${data.id})" class="action-button delete-button">Elimina</button>`;
                 }
             }
         ]
     });
+    
+    // Fetch initial data
+    fetchAndPopulateFutureVisits();
 }
 
 function initializePeopleTable() {
@@ -2110,5 +2142,76 @@ function hidePersonModals() {
     }
     if (errorModal) {
         errorModal.style.display = 'none';
+    }
+}
+
+// Delete a visit with confirmation
+async function deleteVisit(visitId) {
+    if (!confirm('Sei sicuro di voler eliminare questa visita?')) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            throw new Error('Token di autenticazione non trovato');
+        }
+
+        const response = await fetch(`http://localhost:8080/visit/${visitId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Refresh both tables to show the updated data
+
+        await fetchAndPopulateTodayVisits();
+        await fetchAndPopulateFutureVisits();
+        alert('Visita eliminata con successo');
+    } catch (error) {
+        console.error('Errore durante l\'eliminazione della visita:', error);
+        alert('Errore durante l\'eliminazione della visita');
+    }
+}
+
+// Assign a badge to a visit
+async function assignBadge(visitId) {
+    const badgeNumber = prompt('Inserisci il numero del badge:');
+    if (!badgeNumber) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            throw new Error('Token di autenticazione non trovato');
+        }
+
+        const response = await fetch(`http://localhost:8080/visit/assign_badge/${visitId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ badgeNumber: badgeNumber })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Refresh the tables to show the updated data
+        await fetchAndPopulateTodayVisits();
+        await fetchAndPopulateFutureVisits();
+        alert('Badge assegnato con successo');
+    } catch (error) {
+        console.error('Errore durante l\'assegnazione del badge:', error);
+        alert('Errore durante l\'assegnazione del badge');
     }
 }
