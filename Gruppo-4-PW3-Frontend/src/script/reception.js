@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
     setupPresentPeopleTables(); // Initialize present people tables on load
     setupPresentPeople(); // Initialize present people section
 
+    // Initialize dropdown arrow toggle functionality
+    initializeDropdownArrows();
+
     // Attach the create person form submit handler here!
     const createPersonForm = document.getElementById('createPersonForm');
     if (createPersonForm) {
@@ -2009,4 +2012,54 @@ function formatTimeToHourMinute(timeString) {
         console.warn('Error formatting time:', timeString, error);
         return timeString;
     }
+}
+
+// Function to initialize dropdown arrow toggle functionality
+function initializeDropdownArrows() {
+    // Get all select elements in form groups
+    const selects = document.querySelectorAll('.form-group select');
+    
+    selects.forEach(select => {
+        // Add event listeners for focus and blur
+        select.addEventListener('focus', function() {
+            this.classList.add('opened');
+        });
+        
+        select.addEventListener('blur', function() {
+            this.classList.remove('opened');
+        });
+        
+        // Also handle mousedown/mouseup for better UX
+        select.addEventListener('mousedown', function() {
+            this.classList.add('opened');
+        });
+        
+        // Remove opened class when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.form-group select')) {
+                selects.forEach(s => s.classList.remove('opened'));
+            }
+        });
+    });
+}
+
+// Close all selects and reset arrows
+function closeAllSelects(exceptSelect = null) {
+    const allSelects = document.querySelectorAll('.form-select');
+    const allArrows = document.querySelectorAll('.arrow img');
+
+    allSelects.forEach(select => {
+        if (select !== exceptSelect) {
+            select.classList.remove('open');
+        }
+    });
+
+    allArrows.forEach(arrow => {
+        // Solo resetta le frecce dei select che non sono l'eccezione
+        const parentSelect = arrow.closest('.form-select');
+
+        if (parentSelect !== exceptSelect) {
+            arrow.src = '/src/assets/down_arrow_white_icon.png';
+        }
+    });
 }

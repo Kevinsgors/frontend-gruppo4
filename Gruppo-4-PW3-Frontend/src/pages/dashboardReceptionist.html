@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
-    <link rel="icon" type="image/png" href="/assets/logo-mona.png">
+    <link rel="icon" type="image/png" href="/src/assets/logo-mona.png">
 </head>
 
 <body>
@@ -334,23 +334,23 @@
                         <div class="form-section">
                             <h3>Informazioni Personali</h3>
                             <div class="form-group">
-                                <label for="nome-crea-persona">Nome *</label>
+                                <label for="nome-crea-persona">Nome </label>
                                 <input type="text" id="nome-crea-persona" name="nome" required>
                             </div>
                             <div class="form-group">
-                                <label for="cognome-crea-persona">Cognome *</label>
+                                <label for="cognome-crea-persona">Cognome </label>
                                 <input type="text" id="cognome-crea-persona" name="cognome" required>
                             </div>
                             <div class="form-group">
-                                <label for="dataNascita">Data di Nascita *</label>
+                                <label for="dataNascita">Data di Nascita </label>
                                 <input type="date" id="dataNascita" name="dataNascita" required>
                             </div>
                             <div class="form-group">
-                                <label for="luogoNascita">Luogo di Nascita *</label>
+                                <label for="luogoNascita">Luogo di Nascita </label>
                                 <input type="text" id="luogoNascita" name="luogoNascita" required>
                             </div>
                             <div class="form-group">
-                                <label for="cf">Codice Fiscale *</label>
+                                <label for="cf">Codice Fiscale </label>
                                 <input type="text" id="cf" name="cf" required>
                             </div>
                             <div class="form-group">
@@ -362,7 +362,7 @@
                         <div class="form-section">
                             <h3>Contatti</h3>
                             <div class="form-group">
-                                <label for="mail-crea-persona">Email *</label>
+                                <label for="mail-crea-persona">Email </label>
                                 <input type="email" id="mail-crea-persona" name="mail" required>
                             </div>
                             <div class="form-group">
@@ -370,7 +370,7 @@
                                 <input type="tel" id="telefono" name="telefono">
                             </div>
                             <div class="form-group">
-                                <label for="cellulare">Cellulare *</label>
+                                <label for="cellulare">Cellulare </label>
                                 <input type="tel" id="cellulare" name="cellulare" required>
                             </div>
                             <div class="form-group">
@@ -382,23 +382,23 @@
                         <div class="form-section">
                             <h3>Informazioni Aziendali</h3>
                             <div class="form-group">
-                                <label for="azienda-crea-persona">Azienda *</label>
+                                <label for="azienda-crea-persona">Azienda </label>
                                 <input type="text" id="azienda-crea-persona" name="azienda" required>
                             </div>
                             <div class="form-group">
-                                <label for="indirizzo">Indirizzo *</label>
+                                <label for="indirizzo">Indirizzo </label>
                                 <input type="text" id="indirizzo" name="indirizzo" required>
                             </div>
                             <div class="form-group">
-                                <label for="citta">Città *</label>
+                                <label for="citta">Città </label>
                                 <input type="text" id="citta" name="citta" required>
                             </div>
                             <div class="form-group">
-                                <label for="provincia">Provincia *</label>
+                                <label for="provincia">Provincia </label>
                                 <input type="text" id="provincia" name="provincia" required maxlength="2">
                             </div>
                             <div class="form-group">
-                                <label for="nazione">Nazione *</label>
+                                <label for="nazione">Nazione </label>
                                 <input type="text" id="nazione" name="nazione" required>
                             </div>
                             <div class="form-group">
@@ -414,7 +414,7 @@
                         <div class="form-section">
                             <h3>Documenti</h3>
                             <div class="form-group">
-                                <label for="tipoDocumento">Tipo Documento *</label>
+                                <label for="tipoDocumento">Tipo Documento </label>
                                 <select id="tipoDocumento" name="tipoDocumento" required>
                                     <option value="C.I.">Carta d'identità</option>
                                     <option value="PATENTE">Patente</option>
@@ -422,11 +422,11 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="numeroDocumento">Numero Documento *</label>
+                                <label for="numeroDocumento">Numero Documento </label>
                                 <input type="text" id="numeroDocumento" name="numeroDocumento" required>
                             </div>
                             <div class="form-group">
-                                <label for="dataScadenzaDoc">Data Scadenza Documento *</label>
+                                <label for="dataScadenzaDoc">Data Scadenza Documento </label>
                                 <input type="date" id="dataScadenzaDoc" name="dataScadenzaDoc" required>
                             </div>
                             <div class="form-group">
@@ -434,16 +434,16 @@
                                 <input type="checkbox" id="duvri" name="duvri">
                             </div>
                             <div class="form-group">
-                                <label for="flagDocPrivacy">Privacy *</label>
+                                <label for="flagDocPrivacy">Privacy </label>
                                 <input type="checkbox" id="flagDocPrivacy" name="flagDocPrivacy" required>
                                 <span>Ho letto e accetto l'informativa sulla privacy</span>
                             </div>
                             <div class="form-group">
-                                <label for="dataConsegnaDocPrivacy">Data Consegna Privacy *</label>
+                                <label for="dataConsegnaDocPrivacy">Data Consegna Privacy </label>
                                 <input type="date" id="dataConsegnaDocPrivacy" name="dataConsegnaDocPrivacy" required>
                             </div>
                             <div class="form-group">
-                                <label for="idRuolo">Ruolo *</label>
+                                <label for="idRuolo">Ruolo </label>
                                 <select id="idRuolo" name="idRuolo">
                                     <option></option>
                                     <option value="1">Admin</option>

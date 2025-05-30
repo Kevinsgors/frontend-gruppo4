@@ -826,3 +826,297 @@ table.dataTable.custom-table.no-footer {
 div.dt-container.dt-empty-footer tbody > tr:last-child > * {
     border-bottom: none !important;
 }
+
+/* =====================
+   GENERIC FORM STYLING
+   ===================== */
+
+/* Main form container */
+.create-person-form {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* Grid layout for form sections */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* Individual form sections */
+.form-section {
+    background-color: #7C8BA6;
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.form-section h3 {
+    color: #0A1429;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #0A1429;
+}
+
+/* Form groups for individual fields */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Labels */
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0A1429;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Input fields styling */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="date"],
+.form-group input[type="number"],
+.form-group select {
+    width: 100%;
+    height: 42px;
+    padding: 10px 15px;
+    border: 2px solid #d9d9d9;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #fff;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="tel"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="number"]:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #405577;
+    box-shadow: 0 0 0 3px rgba(64, 85, 119, 0.1);
+}
+
+.form-group input[type="text"]:invalid,
+.form-group input[type="email"]:invalid,
+.form-group input[type="tel"]:invalid,
+.form-group input[type="date"]:invalid,
+.form-group input[type="number"]:invalid,
+.form-group select:invalid {
+    border-color: #0A1429;
+}
+
+/* Select dropdown styling */
+.form-group select {
+    cursor: pointer;
+    background-image: url(/src/assets/down_arrow_black.png);
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 35px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: background-image 0.2s ease;
+}
+
+/* Select dropdown styling when opened */
+.form-group select.opened {
+    background-image: url(/src/assets/up_arrow_black.png);
+}
+
+/* Checkbox styling */
+.form-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    margin-bottom: 0;
+    cursor: pointer;
+    accent-color: #405577;
+    border-radius: 4px;
+}
+
+.form-group input[type="checkbox"] + span {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Checkbox container styling */
+.form-group:has(input[type="checkbox"]) {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.form-group:has(input[type="checkbox"]) label {
+    margin-bottom: 0;
+    margin-right: 10px;
+    min-width: 60px;
+}
+
+/* Form actions container */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Primary button styling */
+.btn-primary {
+    background-color: #1b2b48;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    min-width: 150px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary:hover {
+    background-color: #405577;
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Secondary button styling */
+.btn-secondary {
+    background-color: transparent;
+    color: #7C8BA6;
+    border: 2px solid #7C8BA6;
+    padding: 10px 30px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-secondary:hover {
+    background-color: #7C8BA6;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Required field indicator */
+.form-group label:after {
+    content: "";
+}
+
+.form-group:has(input[required]) label:after,
+.form-group:has(select[required]) label:after {
+    content: " *";
+    color: #0A1429;
+    font-weight: bold;
+}
+
+/* Error state styling */
+.form-group.error input,
+.form-group.error select {
+    border-color: #0A1429;
+    background-color: #fff;
+}
+
+.form-group.error label {
+    color: #0A1429;
+}
+
+/* Success state styling */
+.form-group.success input,
+.form-group.success select {
+    border-color: #405577;
+    background-color: #fff;
+}
+
+/* Disabled state styling */
+.form-group input:disabled,
+.form-group select:disabled {
+    background-color: #fff;
+    color: #7C8BA6;
+    cursor: not-allowed;
+    border-color: #e9ecef;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .form-section {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .create-person-form {
+        padding: 10px;
+    }
+    
+    .form-section {
+        padding: 15px;
+    }
+    
+    .form-section h3 {
+        font-size: 16px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        height: 40px;
+        font-size: 13px;
+    }
+}
