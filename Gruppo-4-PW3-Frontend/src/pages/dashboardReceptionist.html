@@ -198,7 +198,6 @@
                                 <th>Data Fine</th>
                                 <th>Ora Fine</th>
                                 <th>Dipendente</th>
-                                <th>Azioni</th>
                             </tr>
                         </thead>
                     </table>
@@ -216,7 +215,6 @@
                                 <th>Ora</th>
                                 <th>Tipo</th>
                                 <th>Badge</th>
-                                <th>Azioni</th>
                             </tr>
                         </thead>
                     </table>
@@ -233,7 +231,6 @@
                                 <th>Ora</th>
                                 <th>Tipo</th>
                                 <th>Badge</th>
-                                <th>Azioni</th>
                             </tr>
                         </thead>
                     </table>
@@ -251,7 +248,6 @@
                                 <th>Ora</th>
                                 <th>Tipo</th>
                                 <th>Badge</th>
-                                <th>Azioni</th>
                             </tr>
                         </thead>
                     </table>
@@ -259,7 +255,135 @@
             </section>
             <section id="admin-visitatori-crea-persone-section" class="section">
                 <h2>Crea Persone</h2>
-                <p>Qui puoi creare nuove persone.</p>
+                <form id="createPersonForm" class="create-person-form">
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3>Informazioni Personali</h3>
+                            <div class="form-group">
+                                <label for="nome-crea-persona">Nome *</label>
+                                <input type="text" id="nome-crea-persona" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cognome-crea-persona">Cognome *</label>
+                                <input type="text" id="cognome-crea-persona" name="cognome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dataNascita">Data di Nascita *</label>
+                                <input type="date" id="dataNascita" name="dataNascita" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="luogoNascita">Luogo di Nascita *</label>
+                                <input type="text" id="luogoNascita" name="luogoNascita" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cf">Codice Fiscale *</label>
+                                <input type="text" id="cf" name="cf" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dataAssunzione">Data Assunzione</label>
+                                <input type="date" id="dataAssunzione" name="dataAssunzione">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Contatti</h3>
+                            <div class="form-group">
+                                <label for="mail-crea-persona">Email *</label>
+                                <input type="email" id="mail-crea-persona" name="mail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="telefono">Telefono</label>
+                                <input type="tel" id="telefono" name="telefono">
+                            </div>
+                            <div class="form-group">
+                                <label for="cellulare">Cellulare *</label>
+                                <input type="tel" id="cellulare" name="cellulare" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fax">Fax</label>
+                                <input type="tel" id="fax" name="fax">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Informazioni Aziendali</h3>
+                            <div class="form-group">
+                                <label for="azienda-crea-persona">Azienda *</label>
+                                <input type="text" id="azienda-crea-persona" name="azienda" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="indirizzo">Indirizzo *</label>
+                                <input type="text" id="indirizzo" name="indirizzo" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="citta">Città *</label>
+                                <input type="text" id="citta" name="citta" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="provincia">Provincia *</label>
+                                <input type="text" id="provincia" name="provincia" required maxlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="nazione">Nazione *</label>
+                                <input type="text" id="nazione" name="nazione" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pIva">Partita IVA</label>
+                                <input type="text" id="pIva" name="pIva">
+                            </div>
+                            <div class="form-group">
+                                <label for="numCentriCosto">Numero Centri di Costo</label>
+                                <input type="number" id="numCentriCosto" name="numCentriCosto">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Documenti</h3>
+                            <div class="form-group">
+                                <label for="tipoDocumento">Tipo Documento *</label>
+                                <select id="tipoDocumento" name="tipoDocumento" required>
+                                    <option value="C.I.">Carta d'identità</option>
+                                    <option value="PATENTE">Patente</option>
+                                    <option value="PASSAPORTO">Passaporto</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="numeroDocumento">Numero Documento *</label>
+                                <input type="text" id="numeroDocumento" name="numeroDocumento" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dataScadenzaDoc">Data Scadenza Documento *</label>
+                                <input type="date" id="dataScadenzaDoc" name="dataScadenzaDoc" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="duvri">DUVRI</label>
+                                <input type="checkbox" id="duvri" name="duvri">
+                            </div>
+                            <div class="form-group">
+                                <label for="flagDocPrivacy">Privacy *</label>
+                                <input type="checkbox" id="flagDocPrivacy" name="flagDocPrivacy" required>
+                                <span>Ho letto e accetto l'informativa sulla privacy</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="dataConsegnaDocPrivacy">Data Consegna Privacy *</label>
+                                <input type="date" id="dataConsegnaDocPrivacy" name="dataConsegnaDocPrivacy" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="idRuolo">Ruolo *</label>
+                                <select id="idRuolo" name="idRuolo" required>
+                                    <option value="1">Admin</option>
+                                    <option value="2">Reception</option>
+                                    <option value="3">Richiedente</option>
+                                    <option value="4">Visitatore</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Crea Persona</button>
+                        <button type="reset" class="btn-secondary">Cancella</button>
+                    </div>
+                </form>
             </section>
             <section id="admin-visitatori-elenco-presenti-section" class="section">
                 <h2>Elenco Presenti</h2>
@@ -278,7 +402,6 @@
                                 <th>Cellulare</th>
                                 <th>Azienda</th>
                                 <th>Ruolo</th>
-                                <th>Azioni</th>
                             </tr>
                         </thead>
                         <tbody>

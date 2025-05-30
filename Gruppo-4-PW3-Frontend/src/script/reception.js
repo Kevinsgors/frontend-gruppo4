@@ -223,14 +223,6 @@ function initializeVisitsTable() {
                 render: function (data) {
                     return `${data.responsabile?.nome || ''} ${data.responsabile?.cognome || ''}`;
                 }
-            },
-            {
-                title: 'Azioni',
-                data: null,
-                render: function (data, type, row) {
-                    // Pass the entire row data to showVisitDetails
-                    return `<button onclick='showVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
-                }
             }
         ]
     });
@@ -259,38 +251,6 @@ async function fetchAndPopulateVisits() {
     }
 }
 
-function showVisitDetails(visit) {
-    // Populate visitor information
-    document.getElementById('visitorName').textContent = visit.personaVisitatore?.nome || '';
-    document.getElementById('visitorSurname').textContent = visit.personaVisitatore?.cognome || '';
-    document.getElementById('visitorEmail').textContent = visit.personaVisitatore?.mail || '';
-    document.getElementById('visitorPhone').textContent = visit.personaVisitatore?.telefono || visit.personaVisitatore?.cellulare || '';
-
-    // Populate employee information
-    document.getElementById('employeeName').textContent = visit.responsabile?.nome || '';
-    document.getElementById('employeeSurname').textContent = visit.responsabile?.cognome || '';
-    document.getElementById('employeeEmail').textContent = visit.responsabile?.mail || '';
-
-    // Format and populate dates
-    const startDate = visit.dataInizio ? new Date(visit.dataInizio) : null;
-    const endDate = visit.dataFine ? new Date(visit.dataFine) : null;
-    const startTime = visit.oraInizio || '';
-    const endTime = visit.oraFine || '';
-
-    document.getElementById('startDate').textContent = startDate ?
-        `${startDate.toLocaleDateString('it-IT')} ${startTime}` : '';
-    document.getElementById('endDate').textContent = endDate ?
-        `${endDate.toLocaleDateString('it-IT')} ${endTime}` : '';
-
-    // Populate additional details
-    document.getElementById('visitReason').textContent = visit.motivo || '';
-    document.getElementById('visitDPI').textContent = visit.flagDPI ? 'Sì' : 'No';
-    document.getElementById('visitCar').textContent = visit.flagAccessoConAutomezzo ? 'Sì' : 'No';
-
-    // Show modal
-    const modal = document.getElementById('visitDetailsModal');
-    modal.style.display = 'block';
-}
 
 // Modal close functionality
 document.addEventListener('DOMContentLoaded', function () {
@@ -400,13 +360,6 @@ function initializeEmployeeBadgesTable() {
                 render: function (data) {
                     return data || '';
                 }
-            },
-            {
-                title: 'Azioni',
-                data: null,
-                render: function (data, type, row) {
-                    return `<button onclick='showBadgeDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
-                }
             }
         ]
     });
@@ -508,13 +461,6 @@ function initializeVisitorBadgesTable() {
                 render: function (data) {
                     return data || '';
                 }
-            },
-            {
-                title: 'Azioni',
-                data: null,
-                render: function (data, type, row) {
-                    return `<button onclick='showVisitorBadgeDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
-                }
             }
         ]
     });
@@ -540,26 +486,6 @@ async function fetchAndPopulateVisitorBadges() {
     } catch (error) {
         console.error('Error fetching visitor badges:', error);
     }
-}
-
-function showVisitorBadgeDetails(badge) {
-    // Populate visitor information
-    document.getElementById('employeeBadgeName').textContent = badge.nome || '';
-    document.getElementById('employeeBadgeSurname').textContent = badge.cognome || '';
-    document.getElementById('employeeBadgeId').textContent = badge.idPersona || '';
-
-    // Format and populate date and time
-    const badgeDate = badge.dataTimbratura ? new Date(badge.dataTimbratura).toLocaleDateString('it-IT') : '';
-    document.getElementById('badgeDate').textContent = badgeDate;
-    document.getElementById('badgeTime').textContent = badge.oraTimbrature || '';
-
-    // Populate badge details
-    document.getElementById('badgeType').textContent = badge.descrizioneTimbratrice || '';
-    document.getElementById('badgeCode').textContent = badge.codiceBadge || '';
-
-    // Show modal
-    const modal = document.getElementById('badgeDetailsModal');
-    modal.style.display = 'block';
 }
 
 let lunchAreaBadgesTable = null;
@@ -636,13 +562,6 @@ function initializeLunchAreaBadgesTable() {
                 render: function (data) {
                     return data || '';
                 }
-            },
-            {
-                title: 'Azioni',
-                data: null,
-                render: function (data, type, row) {
-                    return `<button onclick='showLunchAreaBadgeDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
-                }
             }
         ]
     });
@@ -668,26 +587,6 @@ async function fetchAndPopulateLunchAreaBadges() {
     } catch (error) {
         console.error('Error fetching lunch area badges:', error);
     }
-}
-
-function showLunchAreaBadgeDetails(badge) {
-    // Populate visitor information
-    document.getElementById('employeeBadgeName').textContent = badge.nome || '';
-    document.getElementById('employeeBadgeSurname').textContent = badge.cognome || '';
-    document.getElementById('employeeBadgeId').textContent = badge.idPersona || '';
-
-    // Format and populate date and time
-    const badgeDate = badge.dataTimbratura ? new Date(badge.dataTimbratura).toLocaleDateString('it-IT') : '';
-    document.getElementById('badgeDate').textContent = badgeDate;
-    document.getElementById('badgeTime').textContent = badge.oraTimbrature || '';
-
-    // Populate badge details
-    document.getElementById('badgeType').textContent = badge.descrizioneTimbratrice || '';
-    document.getElementById('badgeCode').textContent = badge.codiceBadge || '';
-
-    // Show modal
-    const modal = document.getElementById('badgeDetailsModal');
-    modal.style.display = 'block';
 }
 
 let employeePhoneDirectoryTable = null;
@@ -1315,4 +1214,122 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+});
+
+// Handle create person form submission
+document.getElementById('createPersonForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    try {
+        const nome = String(document.getElementById("nome-crea-persona").value);
+        const cognome = String(document.getElementById("cognome-crea-persona").value);
+        const azienda = String(document.getElementById("azienda-crea-persona").value);
+        const indirizzo = String(document.getElementById("indirizzo").value);
+        const citta = String(document.getElementById("citta").value);
+        const provincia = String(document.getElementById("provincia").value);
+        const nazione = String(document.getElementById("nazione").value);
+        const telefono = String(document.getElementById("telefono").value);
+        const cellulare = String(document.getElementById("cellulare").value);
+        let fax = String(document.getElementById("fax").value);
+        fax = fax === "" ? null : fax;
+
+        let pIva = String(document.getElementById("pIva").value);
+        pIva = pIva === "" ? null : pIva;
+
+        const cf = String(document.getElementById("cf").value);
+        const mail = String(document.getElementById("mail-crea-persona").value);
+        let dataAssunzione = document.getElementById("dataAssunzione").value;
+
+        if (dataAssunzione === null || dataAssunzione === "") {
+            dataAssunzione = "1970-01-01";
+        }
+
+        const luogoNascita = String(document.getElementById("luogoNascita").value);
+        const dataNascita = document.getElementById("dataNascita").value;
+        const tipoDocumento = String(document.getElementById("tipoDocumento").value);
+        const numeroDocumento = String(document.getElementById("numeroDocumento").value);
+        const dataScadenzaDoc = document.getElementById("dataScadenzaDoc").value;
+        const duvri = String(document.getElementById("duvri").checked);
+        let numCentriCosto = Number(document.getElementById("numCentriCosto").value);
+        numCentriCosto = numCentriCosto === 0 ? null : numCentriCosto;
+
+        const flagDocPrivacy = document.getElementById("flagDocPrivacy").checked;
+        const dataConsegnaDocPrivacy = document.getElementById("dataConsegnaDocPrivacy").value;
+        const idRuolo = Number(document.getElementById("idRuolo").value);
+
+        const requestBody = {
+            "idRuna": null,
+            "nome": nome,
+            "cognome": cognome,
+            "diminutivo": null,
+            "azienda": azienda,
+            "indirizzo": indirizzo,
+            "citta": citta,
+            "provincia": provincia,
+            "nazione": nazione,
+            "telefono": telefono,
+            "cellulare": cellulare,
+            "fax": fax,
+            "pIva": pIva,
+            "cf": cf,
+            "mail": mail,
+            "foto": null,
+            "dataAssunzione": dataAssunzione,
+            "matricola": null,
+            "idFiliale": null,
+            "idMansione": null,
+            "idDeposito": null,
+            "idRiferimento": null,
+            "visitatore": false,
+            "accessNumber": null,
+            "accessCount": null,
+            "accessUpdate": null,
+            "luogoNascita": luogoNascita,
+            "dataNascita": dataNascita,
+            "dataScadCertificato": null,
+            "preposto": null,
+            "antincendio": null,
+            "primoSoccorso": null,
+            "tipoDocumento": tipoDocumento,
+            "numeroDocumento": numeroDocumento,
+            "dataScadenzaDoc": dataScadenzaDoc,
+            "duvri": duvri,
+            "numCentriCosto": numCentriCosto,
+            "flagDocPrivacy": flagDocPrivacy,
+            "dataConsegnaDocPrivacy": dataConsegnaDocPrivacy,
+            "idRuolo": idRuolo
+        };
+
+        console.log('Creating person:', requestBody);
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('No authentication token found');
+        }
+
+        const response = await fetch('http://localhost:8080/people', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        // Show success message
+        alert('Persona creata con successo!');
+        
+        // Reset form
+        this.reset();
+        
+    } catch (error) {
+        console.error('Error creating person:', error);
+        alert('Errore durante la creazione della persona. Per favore riprova.');
+    }
 });
