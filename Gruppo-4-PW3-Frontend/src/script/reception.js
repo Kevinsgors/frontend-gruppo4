@@ -14,7 +14,128 @@ document.addEventListener('DOMContentLoaded', function () {
     setupFutureVisits();
     setupPeopleList();
     updatePeopleCount();
+
+    // Attach the create person form submit handler here!
+    const createPersonForm = document.getElementById('createPersonForm');
+    if (createPersonForm) {
+        createPersonForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            alert("funzione");
+            try {
+                const nome = String(document.getElementById("nome-crea-persona").value);
+                const cognome = String(document.getElementById("cognome-crea-persona").value);
+                const azienda = String(document.getElementById("azienda-crea-persona").value);
+                const indirizzo = String(document.getElementById("indirizzo").value);
+                const citta = String(document.getElementById("citta").value);
+                const provincia = String(document.getElementById("provincia").value);
+                const nazione = String(document.getElementById("nazione").value);
+                const telefono = String(document.getElementById("telefono").value);
+                const cellulare = String(document.getElementById("cellulare").value);
+                let fax = String(document.getElementById("fax").value);
+                fax = fax === "" ? null : fax;
+ 
+                let pIva = String(document.getElementById("pIva").value);
+                pIva = pIva === "" ? null : pIva;
+ 
+                const cf = String(document.getElementById("cf").value);
+                const mail = String(document.getElementById("mail-crea-persona").value);
+                let dataAssunzione = document.getElementById("dataAssunzione").value;
+ 
+                if (dataAssunzione === null || dataAssunzione === "") {
+                    dataAssunzione = "1970-01-01";
+                }
+ 
+                const luogoNascita = String(document.getElementById("luogoNascita").value);
+                const dataNascita = document.getElementById("dataNascita").value;
+                const tipoDocumento = String(document.getElementById("tipoDocumento").value);
+                const numeroDocumento = String(document.getElementById("numeroDocumento").value);
+                const dataScadenzaDoc = document.getElementById("dataScadenzaDoc").value;
+                const duvri = String(document.getElementById("duvri").checked);
+                let numCentriCosto = Number(document.getElementById("numCentriCosto").value);
+                numCentriCosto = numCentriCosto === 0 ? null : numCentriCosto;
+ 
+                const flagDocPrivacy = document.getElementById("flagDocPrivacy").checked;
+                const dataConsegnaDocPrivacy = document.getElementById("dataConsegnaDocPrivacy").value;
+                const idRuolo = Number(document.getElementById("idRuolo").value);
+ 
+                const requestBody = {
+                    "idRuna": null,
+                    "nome": nome,
+                    "cognome": cognome,
+                    "diminutivo": null,
+                    "azienda": azienda,
+                    "indirizzo": indirizzo,
+                    "citta": citta,
+                    "provincia": provincia,
+                    "nazione": nazione,
+                    "telefono": telefono,
+                    "cellulare": cellulare,
+                    "fax": fax,
+                    "pIva": pIva,
+                    "cf": cf,
+                    "mail": mail,
+                    "foto": null,
+                    "dataAssunzione": dataAssunzione,
+                    "matricola": null,
+                    "idFiliale": null,
+                    "idMansione": null,
+                    "idDeposito": null,
+                    "idRiferimento": null,
+                    "visitatore": false,
+                    "accessNumber": null,
+                    "accessCount": null,
+                    "accessUpdate": null,
+                    "luogoNascita": luogoNascita,
+                    "dataNascita": dataNascita,
+                    "dataScadCertificato": null,
+                    "preposto": null,
+                    "antincendio": null,
+                    "primoSoccorso": null,
+                    "tipoDocumento": tipoDocumento,
+                    "numeroDocumento": numeroDocumento,
+                    "dataScadenzaDoc": dataScadenzaDoc,
+                    "duvri": duvri,
+                    "numCentriCosto": numCentriCosto,
+                    "flagDocPrivacy": flagDocPrivacy,
+                    "dataConsegnaDocPrivacy": dataConsegnaDocPrivacy,
+                    "idRuolo": idRuolo
+                };
+ 
+                console.log('Creating person:', requestBody);
+                alert('Creazione in corso...');
+ 
+                const token = localStorage.getItem('accessToken');
+                if (!token) {
+                    throw new Error('No authentication token found');
+                }
+ 
+                const response = await fetch('http://localhost:8080/people', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+ 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+               
+                // Show success message
+                alert('Persona creata con successo!');
+               
+                // Reset form
+                this.reset();
+               
+            } catch (error) {
+                console.error('Error creating person:', error);
+                alert('Errore durante la creazione della persona. Per favore riprova.');
+            }
+        });
+    }
 });
+
 
 // Setup Home Dashboard functionality
 async function setupHomeDashboard() {
