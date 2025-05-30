@@ -76,6 +76,7 @@
             <!-- User Info -->
             <div class="user-box">
                 <div class="avatar-bg"></div>
+                <img class="avatar" src="/src/assets/utente.png" alt="User Avatar">
                 <div class="user-name">Nome e Cognome</div>
                 <button class="action-button" onclick="logout()">Logout</button>
             </div>
@@ -156,7 +157,7 @@
             <section id="admin-visualizza-elenco-visite-odierne-section" class="section">
                 <h2>Elenco Visite Odierne</h2>
                 <div class="table-container">
-                    <table id="todayVisitsTable" class="display custom-table" style="width:100%">
+                    <table id="todayVisitsTable" class="display" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Visitatore</th>
@@ -388,235 +389,127 @@
             </section>
             <section id="admin-visitatori-crea-persone-section" class="section">
                 <h2>Crea Persone</h2>
-                <form id="createPersonForm" class="create-person-form">
-                    <div class="form-grid">
-                        <div class="form-section">
-                            <h3>Informazioni Personali</h3>
-                            <div class="form-group">
-                                <label for="nome-crea-persona">Nome </label>
-                                <input type="text" id="nome-crea-persona" name="nome" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="cognome-crea-persona">Cognome </label>
-                                <input type="text" id="cognome-crea-persona" name="cognome" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="dataNascita">Data di Nascita </label>
-                                <input type="date" id="dataNascita" name="dataNascita" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="luogoNascita">Luogo di Nascita </label>
-                                <input type="text" id="luogoNascita" name="luogoNascita" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="cf">Codice Fiscale </label>
-                                <input type="text" id="cf" name="cf" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="dataAssunzione">Data Assunzione</label>
-                                <input type="date" id="dataAssunzione" name="dataAssunzione">
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h3>Contatti</h3>
-                            <div class="form-group">
-                                <label for="mail-crea-persona">Email </label>
-                                <input type="email" id="mail-crea-persona" name="mail" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="telefono">Telefono</label>
-                                <input type="tel" id="telefono" name="telefono">
-                            </div>
-                            <div class="form-group">
-                                <label for="cellulare">Cellulare </label>
-                                <input type="tel" id="cellulare" name="cellulare" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="fax">Fax</label>
-                                <input type="tel" id="fax" name="fax">
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h3>Informazioni Aziendali</h3>
-                            <div class="form-group">
-                                <label for="azienda-crea-persona">Azienda </label>
-                                <input type="text" id="azienda-crea-persona" name="azienda" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="indirizzo">Indirizzo </label>
-                                <input type="text" id="indirizzo" name="indirizzo" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="citta">Città </label>
-                                <input type="text" id="citta" name="citta" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="provincia">Provincia </label>
-                                <input type="text" id="provincia" name="provincia" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="nazione">Nazione </label>
-                                <input type="text" id="nazione" name="nazione" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="pIva">Partita IVA</label>
-                                <input type="text" id="pIva" name="pIva">
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h3>Documenti</h3>
-                            <div class="form-group">
-                                <label for="tipoDocumento">Tipo Documento </label>
-                                <input type="text" id="tipoDocumento" name="tipoDocumento" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="numeroDocumento">Numero Documento </label>
-                                <input type="text" id="numeroDocumento" name="numeroDocumento" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="dataScadenzaDoc">Data Scadenza Documento </label>
-                                <input type="date" id="dataScadenzaDoc" name="dataScadenzaDoc" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="idRuolo">Ruolo </label>
-                                <input type="number" id="idRuolo" name="idRuolo" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="numCentriCosto">Numero Centri di Costo</label>
-                                <input type="number" id="numCentriCosto" name="numCentriCosto">
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h3>Documentazione Aggiuntiva</h3>
-                            <div class="form-group checkbox-group">
-                                <label for="duvri">DUVRI</label>
-                                <input type="checkbox" id="duvri" name="duvri">
-                            </div>
-                            <div class="form-group checkbox-group">
-                                <label for="flagDocPrivacy">Documento Privacy</label>
-                                <input type="checkbox" id="flagDocPrivacy" name="flagDocPrivacy">
-                            </div>
-                            <div class="form-group">
-                                <label for="dataConsegnaDocPrivacy">Data Consegna Doc. Privacy</label>
-                                <input type="date" id="dataConsegnaDocPrivacy" name="dataConsegnaDocPrivacy">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="action-button">Crea Persona</button>
-                        <button type="reset" class="action-button secondary">Annulla</button>
-                    </div>
-                </form>
+                <p>Qui puoi creare nuove persone.</p>
             </section>
-
-            <!-- Success Modal -->
-            <div id="personSuccessModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Successo</h3>
-                        <span class="close-modal">&times;</span>
+            <section id="admin-visitatori-elenco-presenti-section" class="section">
+                <div class="top-section">
+                    <div class="top-left">
+                        <h1>Elenco Presenti</h1>
                     </div>
-                    <div class="modal-body">
-                        <p>Persona creata con successo!</p>
-                    </div>
-                </div>
-            </div>
+                    <div class="top-right">
+                        <div class="big-box">
+                            <div style="font-size:2.5rem;font-weight:bold;line-height:1;" class="totalPresent">0</div>
+                            <div style="font-size:1rem;">Presenti totali</div>
+                        </div>
 
-            <!-- Error Modal -->
-            <div id="personErrorModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Errore</h3>
-                        <span class="close-modal">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                        <p id="errorMessage">Si è verificato un errore durante la creazione della persona.</p>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <!-- Modal Success Operazione -->
-    <div id="operationSuccessModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Operazione Completata</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="details-grid">
-                    <div class="detail-section">
-                        <h4 style="color: #28a745; border-bottom-color: #28a745;">✓ Successo</h4>
-                        <p id="operationSuccessMessage">Operazione completata con successo!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Error Operazione -->
-    <div id="operationErrorModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Errore Operazione</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="details-grid">
-                    <div class="detail-section">
-                        <h4 style="color: #dc3545; border-bottom-color: #dc3545;">⚠ Errore</h4>
-                        <p id="operationErrorMessage">Si è verificato un errore durante l'operazione.</p>
-                        <p>Per favore riprova o contatta l'amministratore del sistema.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Error Caricamento -->
-    <div id="loadingErrorModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Errore Caricamento</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="details-grid">                    <div class="detail-section">
-                        <h4 style="color: #ffc107; border-bottom-color: #ffc107;">⚠ Attenzione</h4>
-                        <p id="loadingErrorMessage">Errore durante il caricamento dei dati.</p>
-                        <p>Riprova più tardi o contatta l'amministratore.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Conferma Eliminazione -->
-    <div id="confirmationModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Conferma Eliminazione</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="details-grid">
-                    <div class="detail-section">
-                        <h4 style="color: #dc3545; border-bottom-color: #dc3545;">⚠ Attenzione</h4>
-                        <p id="confirmationMessage">Sei sicuro di voler procedere con l'eliminazione?</p>
-                        <p>Questa azione non può essere annullata.</p>                        <div class="modal-buttons">
-                            <button id="confirmButton" class="btn-danger">Elimina</button>
-                            <button id="cancelButton" class="btn-secondary">Annulla</button>
+                        <div class="small-box">
+                            <div style="font-size:1.5rem;font-weight:bold;" class="employeesCount">0
+                            </div>
+                            <div style="font-size:0.9rem;">Dipendenti</div>
+                        </div>
+                        <div class="small-box">
+                            <div style="font-size:1.5rem;font-weight:bold;" class="visitorsCount">0
+                            </div>
+                            <div style="font-size:0.9rem;">Visitatori</div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+                <div class="bottom-section">
+                    <div class="box">
+                        <h3>Dipendenti</h3>
+                        <table id="table-presenti-dipendeti" class="display custom-table mini-datatable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Cognome</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box">
+                        <h3>Visitatori</h3>
+                        <table id="table-presenti-visitatori" class="display custom-table mini-datatable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Cognome</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section id="admin-visualizza-elenco-persone-section" class="section">
+                <h2>Elenco Persone</h2>
+                <div class="table-container">
+                    <table id="peopleTable" class="display custom-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cognome</th>
+                                <th>Email</th>
+                                <th>Telefono</th>
+                                <th>Cellulare</th>
+                                <th>Azienda</th>
+                                <th>Ruolo</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal for person details -->
+                <div id="personDetailsModal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Dettagli Persona</h3>
+                            <span class="close-modal">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="details-grid">
+                                <div class="detail-section">
+                                    <h4>Informazioni Personali</h4>
+                                    <p><strong>Nome:</strong> <span id="personName"></span></p>
+                                    <p><strong>Cognome:</strong> <span id="personSurname"></span></p>
+                                    <p><strong>Email:</strong> <span id="personEmail"></span></p>
+                                    <p><strong>Telefono:</strong> <span id="personPhone"></span></p>
+                                    <p><strong>Cellulare:</strong> <span id="personMobile"></span></p>
+                                </div>
+                                <div class="detail-section">
+                                    <h4>Informazioni Lavorative</h4>
+                                    <p><strong>Azienda:</strong> <span id="personCompany"></span></p>
+                                    <p><strong>Ruolo:</strong> <span id="personRole"></span></p>
+                                    <p><strong>ID Dipendente:</strong> <span id="personEmployeeId"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="admin-visualizza-elenco-tel-sm-section" class="section">
+                <h2>Elenco Telefonico Dipendenti</h2>
+                <div class="table-container">
+                    <table id="employeePhoneDirectoryTable" class="display custom-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cognome</th>
+                                <th>Email</th>
+                                <th>Telefono</th>
+                                <th>Cellulare</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </section>
+        </main>
     </div>
 
 </body>
