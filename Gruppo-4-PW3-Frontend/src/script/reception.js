@@ -405,7 +405,7 @@ function initializeVisitsTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -549,7 +549,7 @@ function initializeEmployeeBadgesTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'desc'], [2, 'desc']], // Ordina per data e ora decrescente
         columns: [
@@ -643,7 +643,7 @@ function initializeVisitorBadgesTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[2, 'desc'], [3, 'desc']], // Ordina per data e ora decrescente
         columns: [
@@ -744,7 +744,7 @@ function initializeLunchAreaBadgesTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[2, 'desc'], [3, 'desc']], // Ordina per data e ora decrescente
         columns: [
@@ -845,7 +845,7 @@ function initializeEmployeePhoneDirectoryTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [0, 'asc']], // Ordina per cognome, poi per nome
         columns: [
@@ -998,7 +998,7 @@ function initializeTodayVisitsTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -1063,7 +1063,7 @@ function initializeFutureVisitsTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -1128,7 +1128,7 @@ function initializePeopleTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [0, 'asc']], // Ordina per cognome, poi per nome
         columns: [
