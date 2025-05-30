@@ -1286,7 +1286,7 @@ function initializeTodayVisitsTable() {
                     if (data.status === 'Iniziata') {
                         // Se la visita è in corso o ha data inizio ma non fine
                         return `<button onclick='endVisit(${data.id})' class="action-button">Termina Visita</button>`;
-                    } else if (data.status === "Da Iniziare" || !data.dataInizio) {
+                    } else if (!data.status) {
                         // Se la visita non è iniziata (status null o PROGRAMMATA) o non ha data inizio
                         return `<button onclick='startVisit(${data.id})' class="action-button">Inizia Visita</button>`;
                     }
