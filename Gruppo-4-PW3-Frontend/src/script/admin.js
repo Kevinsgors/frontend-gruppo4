@@ -516,13 +516,9 @@ async function setupPeopleList() {
 function initializeTodayVisitsTable() {
     todayVisitsTable = $('#todayVisitsTable').DataTable({
         lengthChange: false,
-        pageLength: 8,
+        pageLength: 6,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -593,13 +589,9 @@ function initializeTodayVisitsTable() {
 function initializeFutureVisitsTable() {
     futureVisitsTable = $('#futureVisitsTable').DataTable({
         lengthChange: false,
-        pageLength: 8,
+        pageLength: 6,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -670,13 +662,9 @@ function initializeFutureVisitsTable() {
 function initializePersonalVisitsTable() {
     personalVisitsTable = $('#personalVisitsTable').DataTable({
         lengthChange: false,
-        pageLength: 8,
+        pageLength: 6,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -739,13 +727,9 @@ function initializePersonalVisitsTable() {
 function initializePeopleTable() {
     peopleTable = $('#peopleTable').DataTable({
         lengthChange: false,
-        pageLength: 8,
+        pageLength: 6,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -801,7 +785,7 @@ function initializePeopleTable() {
                 render: function (data) {
                     return data || '';
                 }
-            }, 
+            },
             {
                 title: 'Ruolo',
                 data: 'ruolo',
@@ -999,9 +983,12 @@ function setupPresentPeopleTables() {
     } else {        // Initialize employees table
         presentEmployeesTable = $('#table-presenti-dipendeti').DataTable({
             lengthChange: false,
-            pageLength: 8,
+            pageLength: 6,
             autoWidth: false,
             responsive: true,
+            buttons: [
+                'pdf'
+            ],
             dom: 'Bfrtip',
             language: {
                 info: "Pagina _PAGE_ di _PAGES_",
@@ -1044,9 +1031,12 @@ function setupPresentPeopleTables() {
         } else {            // Initialize visitors table (including maintenance)
             presentVisitorsTable = $('#table-presenti-visitatori').DataTable({
                 lengthChange: false,
-                pageLength: 8,
+                pageLength: 6,
                 autoWidth: false,
                 responsive: true,
+                buttons: [
+                    'pdf'
+                ],
                 dom: 'Bfrtip',
                 language: {
                     info: "Pagina _PAGE_ di _PAGES_",
@@ -1336,13 +1326,21 @@ async function setupVisitsHistory() {
 
 function initializeVisitsTable() {
     visitsTable = $('#visitsTable').DataTable({
+        lengthChange: false,
+        pageLength: 8,
+        autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            info: "Pagina _PAGE_ di _PAGES_",
+            infoEmpty: "Nessun elemento disponibile",
+            infoFiltered: "(filtrati da _MAX_ elementi totali)",
+            search: "Cerca:",
+            paginate: {
+                next: ">",
+                previous: "<"
+            },
+            emptyTable: "Nessun dato presente nella tabella",
+            zeroRecords: "Nessun risultato trovato"
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -1442,10 +1440,6 @@ function initializeEmployeeBadgesTable() {
         pageLength: 8,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -1548,10 +1542,6 @@ function initializeVisitorBadgesTable() {
         pageLength: 8,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -1661,10 +1651,6 @@ function initializeLunchAreaBadgesTable() {
         pageLength: 8,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
@@ -1774,10 +1760,6 @@ function initializeEmployeePhoneDirectoryTable() {
         pageLength: 8,
         autoWidth: false,
         responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
         language: {
             info: "Pagina _PAGE_ di _PAGES_",
             infoEmpty: "Nessun elemento disponibile",
