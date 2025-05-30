@@ -180,7 +180,7 @@ function initializeHomeDashboardTables() {
         info: false,
         ordering: false,
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
             emptyTable: 'Nessuna visita per oggi'
         },
         columns: [
@@ -237,7 +237,7 @@ function initializeHomeDashboardTables() {
         info: false,
         ordering: false,
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json',
             emptyTable: 'Nessuna visita futura'
         },
         columns: [
@@ -328,8 +328,7 @@ function setupHomeDashboardNavigation() {
 async function loadHomeDashboard() {
     try {
         await Promise.all([
-            loadHomeDashboardData(),
-            updateDashboardStatistics()
+            loadHomeDashboardData()
         ]);
     } catch (error) {
         console.error('Error loading home dashboard:', error);
@@ -375,85 +374,6 @@ async function loadHomeDashboardData() {
 
     } catch (error) {
         console.error('Error loading home dashboard data:', error);
-    }
-}
-
-async function updateDashboardStatistics() {
-    try {
-        // Get visits data for statistics
-        const visitsResponse = await fetch('http://localhost:8080/visit', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                'Content-Type': 'application/json',
-            }
-        });
-
-        if (!visitsResponse.ok) {
-            throw new Error(`HTTP error! status: ${visitsResponse.status}`);
-        }
-
-        const allVisits = await visitsResponse.json();
-
-        // Get people data for employee count
-        const peopleResponse = await fetch('http://localhost:8080/person', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                'Content-Type': 'application/json',
-            }
-        });
-
-        if (!peopleResponse.ok) {
-            throw new Error(`HTTP error! status: ${peopleResponse.status}`);
-        }
-
-        const allPeople = await peopleResponse.json();
-
-        // Calculate statistics
-        const today = new Date();
-        const todayString = today.toISOString().split('T')[0];
-
-        // Count today's visitors
-        const todayVisitors = allVisits.filter(visit => {
-            if (!visit.dataInizio) return false;
-            const visitDate = new Date(visit.dataInizio).toISOString().split('T')[0];
-            return visitDate === todayString;
-        }).length;
-
-        // Count employees (assuming people with ruolo "Dipendente" or similar)
-        const employees = allPeople.filter(person => 
-            person.ruolo && person.ruolo.toLowerCase().includes('dipendente')
-        ).length;
-
-        // Total present = employees + today's visitors
-        const totalPresent = employees + todayVisitors;
-
-        // Update DOM elements
-        const totalPresentElement = document.getElementById('totalPresent');
-        const employeesCountElement = document.getElementById('employeesCount');
-        const visitorsCountElement = document.getElementById('visitorsCount');
-
-        if (totalPresentElement) {
-            totalPresentElement.textContent = totalPresent;
-        }
-        if (employeesCountElement) {
-            employeesCountElement.textContent = employees;
-        }
-        if (visitorsCountElement) {
-            visitorsCountElement.textContent = todayVisitors;
-        }
-
-    } catch (error) {
-        console.error('Error updating dashboard statistics:', error);
-        // Set default values on error
-        const totalPresentElement = document.getElementById('totalPresent');
-        const employeesCountElement = document.getElementById('employeesCount');
-        const visitorsCountElement = document.getElementById('visitorsCount');
-
-        if (totalPresentElement) totalPresentElement.textContent = '0';
-        if (employeesCountElement) employeesCountElement.textContent = '0';
-        if (visitorsCountElement) visitorsCountElement.textContent = '0';
     }
 }
 
@@ -571,7 +491,7 @@ function initializeTodayVisitsTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -636,7 +556,7 @@ function initializeFutureVisitsTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -700,7 +620,7 @@ function initializePersonalVisitsTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -758,7 +678,7 @@ function initializePeopleTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [0, 'asc']], // Ordina per cognome, poi per nome
         columns: [
@@ -1184,7 +1104,7 @@ function initializeVisitsTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [2, 'asc']], // Ordina prima per data inizio, poi per ora inizio
         columns: [
@@ -1229,14 +1149,6 @@ function initializeVisitsTable() {
                 render: function (data) {
                     return `${data.responsabile?.nome || ''} ${data.responsabile?.cognome || ''}`;
                 }
-            },
-            {
-                title: 'Azioni',
-                data: null,
-                render: function (data, type, row) {
-                    // Pass the entire row data to showVisitDetails
-                    return `<button onclick='showVisitDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
-                }
             }
         ]
     });
@@ -1264,80 +1176,6 @@ async function fetchAndPopulateVisits() {
         // Handle error appropriately
     }
 }
-
-function showVisitDetails(visit) {
-    // Populate visitor information
-    document.getElementById('visitorName').textContent = visit.personaVisitatore?.nome || '';
-    document.getElementById('visitorSurname').textContent = visit.personaVisitatore?.cognome || '';
-    document.getElementById('visitorEmail').textContent = visit.personaVisitatore?.mail || '';
-    document.getElementById('visitorPhone').textContent = visit.personaVisitatore?.telefono || visit.personaVisitatore?.cellulare || '';
-
-    // Populate employee information
-    document.getElementById('employeeName').textContent = visit.responsabile?.nome || '';
-    document.getElementById('employeeSurname').textContent = visit.responsabile?.cognome || '';
-    document.getElementById('employeeEmail').textContent = visit.responsabile?.mail || '';
-
-    // Format and populate dates
-    const startDate = visit.dataInizio ? new Date(visit.dataInizio) : null;
-    const endDate = visit.dataFine ? new Date(visit.dataFine) : null;
-    const startTime = visit.oraInizio || '';
-    const endTime = visit.oraFine || '';
-
-    document.getElementById('startDate').textContent = startDate ?
-        `${startDate.toLocaleDateString('it-IT')} ${startTime}` : '';
-    document.getElementById('endDate').textContent = endDate ?
-        `${endDate.toLocaleDateString('it-IT')} ${endTime}` : '';
-
-    // Populate additional details
-    document.getElementById('visitReason').textContent = visit.motivo || '';
-    document.getElementById('visitDPI').textContent = visit.flagDPI ? 'Sì' : 'No';
-    document.getElementById('visitCar').textContent = visit.flagAccessoConAutomezzo ? 'Sì' : 'No';
-
-    // Show modal
-    const modal = document.getElementById('visitDetailsModal');
-    modal.style.display = 'block';
-}
-
-// Modal close functionality
-document.addEventListener('DOMContentLoaded', function () {
-    // Setup modal close handlers for visit details
-    const visitModal = document.getElementById('visitDetailsModal');
-    const visitCloseBtn = visitModal.querySelector('.close-modal');
-
-    visitCloseBtn.onclick = function () {
-        visitModal.style.display = 'none';
-    }
-
-    // Setup modal close handlers for badge details
-    const badgeModal = document.getElementById('badgeDetailsModal');
-    const badgeCloseBtn = badgeModal.querySelector('.close-modal');
-
-    badgeCloseBtn.onclick = function () {
-        badgeModal.style.display = 'none';
-    }
-
-    // Handle clicking outside any modal to close it
-    window.onclick = function (event) {
-        if (event.target === visitModal) {
-            visitModal.style.display = 'none';
-        }
-        if (event.target === badgeModal) {
-            badgeModal.style.display = 'none';
-        }
-    }
-
-    // Add escape key handler for modals
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape') {
-            if (visitModal.style.display === 'block') {
-                visitModal.style.display = 'none';
-            }
-            if (badgeModal.style.display === 'block') {
-                badgeModal.style.display = 'none';
-            }
-        }
-    });
-});
 
 let employeeBadgesTable = null;
 
@@ -1368,7 +1206,7 @@ function initializeEmployeeBadgesTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'desc'], [2, 'desc']], // Ordina per data e ora decrescente
         columns: [
@@ -1405,13 +1243,6 @@ function initializeEmployeeBadgesTable() {
                 data: 'codiceBadge',
                 render: function (data) {
                     return data || '';
-                }
-            },
-            {
-                title: 'Azioni',
-                data: null,
-                render: function (data, type, row) {
-                    return `<button onclick='showBadgeDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
                 }
             }
         ]
@@ -1469,7 +1300,7 @@ function initializeVisitorBadgesTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[2, 'desc'], [3, 'desc']], // Ordina per data e ora decrescente
         columns: [
@@ -1514,13 +1345,6 @@ function initializeVisitorBadgesTable() {
                 render: function (data) {
                     return data || '';
                 }
-            },
-            {
-                title: 'Azioni',
-                data: null,
-                render: function (data, type, row) {
-                    return `<button onclick='showVisitorBadgeDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
-                }
             }
         ]
     });
@@ -1546,26 +1370,6 @@ async function fetchAndPopulateVisitorBadges() {
     } catch (error) {
         console.error('Error fetching visitor badges:', error);
     }
-}
-
-function showVisitorBadgeDetails(badge) {
-    // Populate visitor information
-    document.getElementById('employeeBadgeName').textContent = badge.nome || '';
-    document.getElementById('employeeBadgeSurname').textContent = badge.cognome || '';
-    document.getElementById('employeeBadgeId').textContent = badge.idPersona || '';
-
-    // Format and populate date and time
-    const badgeDate = badge.dataTimbratura ? new Date(badge.dataTimbratura).toLocaleDateString('it-IT') : '';
-    document.getElementById('badgeDate').textContent = badgeDate;
-    document.getElementById('badgeTime').textContent = badge.oraTimbrature || '';
-
-    // Populate badge details
-    document.getElementById('badgeType').textContent = badge.descrizioneTimbratrice || '';
-    document.getElementById('badgeCode').textContent = badge.codiceBadge || '';
-
-    // Show modal
-    const modal = document.getElementById('badgeDetailsModal');
-    modal.style.display = 'block';
 }
 
 let lunchAreaBadgesTable = null;
@@ -1597,7 +1401,7 @@ function initializeLunchAreaBadgesTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[2, 'desc'], [3, 'desc']], // Ordina per data e ora decrescente
         columns: [
@@ -1642,13 +1446,6 @@ function initializeLunchAreaBadgesTable() {
                 render: function (data) {
                     return data || '';
                 }
-            },
-            {
-                title: 'Azioni',
-                data: null,
-                render: function (data, type, row) {
-                    return `<button onclick='showLunchAreaBadgeDetails(${JSON.stringify(data).replace(/'/g, "&apos;")})' class="action-button">Dettagli</button>`;
-                }
             }
         ]
     });
@@ -1674,26 +1471,6 @@ async function fetchAndPopulateLunchAreaBadges() {
     } catch (error) {
         console.error('Error fetching lunch area badges:', error);
     }
-}
-
-function showLunchAreaBadgeDetails(badge) {
-    // Populate visitor information
-    document.getElementById('employeeBadgeName').textContent = badge.nome || '';
-    document.getElementById('employeeBadgeSurname').textContent = badge.cognome || '';
-    document.getElementById('employeeBadgeId').textContent = badge.idPersona || '';
-
-    // Format and populate date and time
-    const badgeDate = badge.dataTimbratura ? new Date(badge.dataTimbratura).toLocaleDateString('it-IT') : '';
-    document.getElementById('badgeDate').textContent = badgeDate;
-    document.getElementById('badgeTime').textContent = badge.oraTimbrature || '';
-
-    // Populate badge details
-    document.getElementById('badgeType').textContent = badge.descrizioneTimbratrice || '';
-    document.getElementById('badgeCode').textContent = badge.codiceBadge || '';
-
-    // Show modal
-    const modal = document.getElementById('badgeDetailsModal');
-    modal.style.display = 'block';
 }
 
 let employeePhoneDirectoryTable = null;
@@ -1725,7 +1502,7 @@ function initializeEmployeePhoneDirectoryTable() {
             'copy', 'csv', 'excel', 'pdf'
         ],
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/it-IT.json'
         },
         order: [[1, 'asc'], [0, 'asc']], // Ordina per cognome, poi per nome
         columns: [
