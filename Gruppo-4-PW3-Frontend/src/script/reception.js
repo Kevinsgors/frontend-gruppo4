@@ -22,10 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Attach the create person form submit handler here!
     const createPersonForm = document.getElementById('createPersonForm');
-    if (createPersonForm) {
-        createPersonForm.addEventListener('submit', async function(e) {
+    if (createPersonForm) {        createPersonForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            alert("funzione");
             try {
                 const nome = String(document.getElementById("nome-crea-persona").value);
                 const cognome = String(document.getElementById("cognome-crea-persona").value);
@@ -106,9 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     "idRuolo": idRuolo
                 };
  
-                console.log('Creating person:', requestBody);
-                alert('Creazione in corso...');
- 
                 const token = localStorage.getItem('accessToken');
                 if (!token) {
                     throw new Error('No authentication token found');
@@ -121,21 +116,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify(requestBody)
-                });
- 
-                if (!response.ok) {
+                });                if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                
                 // Show success message
-                alert('Persona creata con successo!');
+                showPersonSuccessModal();
                
                 // Reset form
                 this.reset();
                
             } catch (error) {
                 console.error('Error creating person:', error);
-                alert('Errore durante la creazione della persona. Per favore riprova.');
+                showPersonErrorModal('Errore durante la creazione della persona. Per favore riprova.');
             }
         });
     }
@@ -624,9 +617,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     visitCloseBtn.onclick = function () {
         visitModal.style.display = 'none';
-    }
-
-    // Setup modal close handlers for badge details
+    }    // Setup modal close handlers for badge details
     const badgeModal = document.getElementById('badgeDetailsModal');
     const badgeCloseBtn = badgeModal.querySelector('.close-modal');
 
@@ -634,7 +625,25 @@ document.addEventListener('DOMContentLoaded', function () {
         badgeModal.style.display = 'none';
     }
 
-    // Handle clicking outside any modal to close it
+    // Setup modal close handlers for person success modal
+    const personSuccessModal = document.getElementById('personSuccessModal');
+    const personSuccessCloseBtn = personSuccessModal?.querySelector('.close-modal');
+
+    if (personSuccessCloseBtn) {
+        personSuccessCloseBtn.onclick = function () {
+            personSuccessModal.style.display = 'none';
+        }
+    }
+
+    // Setup modal close handlers for person error modal
+    const personErrorModal = document.getElementById('personErrorModal');
+    const personErrorCloseBtn = personErrorModal?.querySelector('.close-modal');
+
+    if (personErrorCloseBtn) {
+        personErrorCloseBtn.onclick = function () {
+            personErrorModal.style.display = 'none';
+        }
+    }    // Handle clicking outside any modal to close it
     window.onclick = function (event) {
         if (event.target === visitModal) {
             visitModal.style.display = 'none';
@@ -642,9 +651,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target === badgeModal) {
             badgeModal.style.display = 'none';
         }
-    }
-
-    // Add escape key handler for modals
+        if (event.target === personSuccessModal) {
+            personSuccessModal.style.display = 'none';
+        }
+        if (event.target === personErrorModal) {
+            personErrorModal.style.display = 'none';
+        }
+    }    // Add escape key handler for modals
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
             if (visitModal.style.display === 'block') {
@@ -652,6 +665,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (badgeModal.style.display === 'block') {
                 badgeModal.style.display = 'none';
+            }
+            if (personSuccessModal && personSuccessModal.style.display === 'block') {
+                personSuccessModal.style.display = 'none';
+            }
+            if (personErrorModal && personErrorModal.style.display === 'block') {
+                personErrorModal.style.display = 'none';
             }
         }
     });
@@ -1909,19 +1928,17 @@ document.getElementById('createPersonForm')?.addEventListener('submit', async fu
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
+        }        const result = await response.json();
         
         // Show success message
-        alert('Persona creata con successo!');
+        showPersonSuccessModal();
         
         // Reset form
         this.reset();
         
     } catch (error) {
         console.error('Error creating person:', error);
-        alert('Errore durante la creazione della persona. Per favore riprova.');
+        showPersonErrorModal('Errore durante la creazione della persona. Per favore riprova.');
     }
 });
 
@@ -2062,4 +2079,36 @@ function closeAllSelects(exceptSelect = null) {
             arrow.src = '/src/assets/down_arrow_white_icon.png';
         }
     });
+}
+
+// Show success modal for person creation
+function showPersonSuccessModal() {
+    const modal = document.getElementById('personSuccessModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+// Show error modal for person creation
+function showPersonErrorModal(errorMessage) {
+    const modal = document.getElementById('personErrorModal');
+    const messageElement = document.getElementById('personErrorMessage');
+    
+    if (modal && messageElement) {
+        messageElement.textContent = errorMessage || 'Si è verificato un errore durante la creazione della persona.';
+        modal.style.display = 'block';
+    }
+}
+
+// Hide person modals
+function hidePersonModals() {
+    const successModal = document.getElementById('personSuccessModal');
+    const errorModal = document.getElementById('personErrorModal');
+    
+    if (successModal) {
+        successModal.style.display = 'none';
+    }
+    if (errorModal) {
+        errorModal.style.display = 'none';
+    }
 }

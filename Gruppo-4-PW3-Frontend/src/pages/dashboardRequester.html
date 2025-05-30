@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Dipendente</title>
-    <link rel="stylesheet" href="/src/css/dashboard.css">
+    <link rel="stylesheet" href="/src/css/dashboard.css">    
     <script src="/src/script/jwtManager.js"></script>
     <script src="/src/script/requestor.js"></script>
+    <script src="/src/script/logout.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
@@ -61,7 +62,7 @@
                 <div class="avatar-bg"></div>
                 <img class="avatar" src="/src/assets/utente.png" alt="User Avatar">
                 <div class="user-name">Nome e Cognome</div>
-                <button class="action-button">Logout</button>
+                <button class="action-button" onclick="logout()">Logout</button>
             </div>
         </aside>
         <main class="main-content">
@@ -71,29 +72,6 @@
                     <div class="top-section">
                         <div class="top-left">
                             <h1>Home</h1>
-                        </div>
-                        <div class="top-right">
-                            <div class="big-box">
-                                <div style="font-size:2.5rem;font-weight:bold;line-height:1;" class="totalPresent">0
-                                </div>
-                                <div style="font-size:1rem;">Presenti totali</div>
-                            </div>
-
-                            <div class="small-box">
-                                <div style="font-size:1.5rem;font-weight:bold;" class="employeesCount">0
-                                </div>
-                                <div style="font-size:0.9rem;">Dipendenti</div>
-                            </div>
-                            <div class="small-box">
-                                <div style="font-size:1.5rem;font-weight:bold;" class="visitorsCount">0
-                                </div>
-                                <div style="font-size:0.9rem;">Visitatori</div>
-                            </div>
-                            <div class="big-box create-user-box">
-                                <div style="font-size:1.3rem;font-weight:bold;margin-bottom:0.5rem;">Crea utente
-                                </div>
-                                <button class="action-button mini-link" type="button" id="createUserBtn">Vai</button>
-                            </div>
                         </div>
                     </div>
                     <div class="bottom-section">
@@ -248,13 +226,14 @@
                         </thead>
                     </table>
                 </div>
-            </section>            <section id="admin-visitatori-crea-visite-section" class="section">
+            </section>
+            <section id="admin-visitatori-crea-visite-section" class="section">
                 <h2>Prenota visita</h2>
                 <div class="create-person-form">
                     <div class="form-grid">
                         <div class="form-section">
                             <h3>Informazioni Visita</h3>
-                            
+
                             <div class="form-group">
                                 <input type="checkbox" id="prima-visita">
                                 <span>Prima visita</span>
@@ -284,12 +263,12 @@
 
                         <div class="form-section">
                             <h3>Data e Ora</h3>
-                            
+
                             <div class="form-group">
                                 <label for="data-inizio">Data inizio</label>
                                 <input type="date" id="data-inizio" name="data-inizio" required>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="ora-inizio">Ora inizio</label>
                                 <input type="time" id="ora-inizio" name="ora-inizio" required>
@@ -297,18 +276,19 @@
 
                             <div class="form-group">
                                 <label for="motivo">Motivo visita</label>
-                                <input type="text" id="motivo" name="motivo" placeholder="Descrivi il motivo della visita" required>
+                                <input type="text" id="motivo" name="motivo"
+                                    placeholder="Descrivi il motivo della visita" required>
                             </div>
                         </div>
 
                         <div class="form-section">
                             <h3>Opzioni Aggiuntive</h3>
-                            
+
                             <div class="form-group">
                                 <input type="checkbox" id="automezzo">
                                 <span>Accesso automezzo</span>
                             </div>
-                            
+
                             <div class="form-group">
                                 <input type="checkbox" id="dpi">
                                 <span>Richiesta DPI</span>
@@ -323,6 +303,61 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Modal Success Visita -->
+    <div id="visitSuccessModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Visita Creata</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="details-grid">
+                    <div class="detail-section">
+                        <h4 style="color: #28a745; border-bottom-color: #28a745;">✓ Successo</h4>
+                        <p>La visita è stata creata con successo!</p>
+                        <p>Puoi visualizzare i dettagli nella sezione "Visite Future".</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    <!-- Modal Validation Error -->
+    <div id="validationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Campo Obbligatorio</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="details-grid">
+                    <div class="detail-section">
+                        <h4 style="color: #ffc107; border-bottom-color: #ffc107;">⚠ Attenzione</h4>
+                        <p id="validationMessage">Campo obbligatorio mancante.</p>
+                        <p>Compila tutti i campi richiesti per continuare.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Error Visita -->
+    <div id="visitErrorModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Errore Creazione Visita</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="details-grid">
+                    <div class="detail-section">
+                        <h4 style="color: #dc3545; border-bottom-color: #dc3545;">⚠ Errore</h4>
+                        <p id="visitErrorMessage">Si è verificato un errore durante la creazione della visita.</p>
+                        <p>Per favore riprova o contatta l'amministratore del sistema.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>
